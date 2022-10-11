@@ -1,0 +1,581 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:ic="http://ivyteam.ch/jsf/component"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="/layouts/frame-10.xhtml">
+		<ui:define name="title">#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/title')}</ui:define>
+		<ui:define name="content">
+			<script>
+			 	window.onunload = function() {
+			 		refreshSetup();
+		        }
+			
+				function filterTable() {
+				  document.getElementById("form:hiddenButton").click(); // Click on the checkbox
+				}
+			
+		        window.isHideTaskName= true;
+		        window.isHideTaskAction = true;
+		        window.isHideCaseInfo = true;
+		        
+		        //Removal of the html scroll bar as a workaround for Chrome making the page to big when using many rows
+		        var style = document.createElement("style");
+		        style.innerHTML = `body::-webkit-scrollbar {display: none;}`;
+		        document.head.appendChild(style);
+			</script>
+			<h:outputStylesheet name="layouts/styles/customStyle.css" />
+			<h:form id="form" style="height: 95vh">
+				<p:growl id="message" />
+				<p:remoteCommand update="@form" actionListener="#{data.stateDataTableBean.init()}" autoRun="true" rendered="#{data.stateDataTableBean.publicProfiles == null}"/>
+				<p:remoteCommand name="refreshSetup" actionListener="#{data.stateDataTableBean.onRefresh()}" />
+				<p:remoteCommand name="updateSelectOneMenuFilters" update="@([id$=businessObjectStatusFilter]) @([id$=onSaleBoolFilter]) @([id$=qualityFilter])" process="@([id$=businessObjectStatusFilter]) @([id$=onSaleBoolFilter]) @([id$=qualityFilter])" />
+				<p:remoteCommand name="resetFilter" actionListener="#{data.stateDataTableBean.resetProfile}" update="#{p:resolveFirstComponentWithId('businessObjectTable', view).clientId}"></p:remoteCommand>
+				<p:defaultCommand target="hiddenButton" />
+				<p:commandButton id="hiddenButton" oncomplete="PF('businessObjectTable').filter()" style="display:none" />
+				<p:dataTable id="businessObjectTable" style="height: 97vh" rendered="#{data.stateDataTableBean.publicProfiles != null}"
+					value="#{data.stateDataTableBean.lazyModel}" var="businessObject" rows="#{data.stateDataTableBean.lazyModel.tableRows}"
+					paginator="true" sortMode="multiple" widgetVar="businessObjectTable"   
+					lazy="true" paginatorPosition="top" rowKey="#{businessObject.id}" scrollable="true" scrollHeight="100%"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+					rowsPerPageTemplate="5,8,10,13,15,18,20,25,30,100"
+               		selection="#{data.selectedBusinessObject}" 
+					sortBy="#{data.stateDataTableBean.lazyModel.sortBy}" editMode="cell" editable="true">
+					<p:ajax event="filter" oncomplete="resetFilter()" />
+					<p:ajax event="sort" oncomplete="resetFilter()" />
+ 					<p:ajax event="cellEdit" process="businessObjectTable" listener="#{logic.saveBusinessObject}" oncomplete="filterTable()" update="#{p:resolveFirstComponentWithId('message', view).clientId}" />
+					
+					<f:facet name="header">
+						<div class="ui-g-5 noPad">
+							<h:panelGroup id="businessObjectPanel">
+								<p:commandButton id="profileName" icon="fa fa-caret-down" iconPos="right" value="Profil: #{data.stateDataTableBean.showProfileName()}" styleClass="tableHeaderButtonLeft whiteIcon" global="false" style="margin-right: 1px;" />
+								<p:overlayPanel id="profileOverlayPanel" styleClass="profileOverlay"
+										for="profileName" my="left top" at="left bottom">
+									<h:panelGroup id="publicProfiles"
+										rendered="#{not empty data.stateDataTableBean.publicProfiles}">
+										<div class="profileTypeLabel">
+											<span>#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/publicProfiles')}</span>
+										</div>
+										<ui:repeat var="publicProfile"
+											value="#{data.stateDataTableBean.publicProfiles}">
+											<h:panelGroup layout="block" styleClass="profileContainer">
+												<p:commandLink id="userDefinedProfile" styleClass="profile"
+													value="#{publicProfile.profileName}"
+													onstart="PF('businessObjectTable').clearFilters();"
+													update="#{p:resolveFirstComponentWithId('businessObjectTable', view).clientId}"
+													actionListener="#{data.stateDataTableBean.applyProfile(publicProfile)}" />
+												<p:tooltip id="userDefinedProfileTip"
+													for="userDefinedProfile"
+													value="#{publicProfile.profileName}" trackMouse="true" />
+												<p:commandLink id="deleteUserDefinedProfileCommand"
+													actionListener="#{data.stateDataTableBean.setProfileToDelete(publicProfile)}"
+													styleClass="deleteProfile"
+													rendered="#{data.isProfileAdmin}"
+													oncomplete="PF('deleteProfileConfirmationDialog').show();">
+													<i class="fa fa-times-circle"></i>
+												</p:commandLink>
+											</h:panelGroup>
+											<br />
+										</ui:repeat>
+									</h:panelGroup>
+									<p:divider
+										rendered="#{not empty data.stateDataTableBean.publicProfiles and not empty data.stateDataTableBean.privateProfiles}" />
+									<h:panelGroup id="privateProfiles" styleClass="privateProfiles"
+										rendered="#{not empty data.stateDataTableBean.privateProfiles}">
+										<div class="profileTypeLabel">
+											<span>#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/privateProfiles')}</span>
+										</div>
+										<ui:repeat var="privateProfile"
+											value="#{data.stateDataTableBean.privateProfiles}">
+											<div class="profileContainer">
+												<p:commandLink id="privateProfile" styleClass="profile"
+													value="#{privateProfile.profileName}"
+													onstart="PF('businessObjectTable').clearFilters()"
+													update="#{p:resolveFirstComponentWithId('businessObjectTable', view).clientId}"
+													actionListener="#{data.stateDataTableBean.applyProfile(privateProfile)}" />
+												<p:tooltip id="privateProfileTip"
+													for="privateProfile"
+													value="#{privateProfile.profileName}" trackMouse="true" />
+												<p:commandLink id="deleteUserDefinedProfileCommand"
+													actionListener="#{data.stateDataTableBean.setProfileToDelete(privateProfile)}"
+													styleClass="deleteProfile"
+													oncomplete="PF('deleteProfileConfirmationDialog').show();">
+													<i class="fa fa-times-circle"></i>
+												</p:commandLink>
+											</div>
+											<br />
+										</ui:repeat>
+									</h:panelGroup>
+									<p:commandButton id="stateReset" value="Table reset"
+										icon="fa fa-refresh" iconPos="right"
+										update="#{p:resolveFirstComponentWithId('businessObjectTable', view).clientId}"
+										actionListener="#{data.stateDataTableBean.resetTableState()}"
+										resetValues="true"
+										style="margin-top: 10px;margin-bottom: 10px;"
+										styleClass="tableHeaderButtonLeft whiteIcon" />
+								</p:overlayPanel>
+							</h:panelGroup>
+							<p:commandButton id="profileSave" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/saveProfile')}"
+								icon="fa fa-save" iconPos="right" update="saveProfileDialog"
+								resetValues="true" oncomplete="PF('saveProfileDialog').show();"
+								styleClass="tableHeaderButtonLeft whiteIcon" />
+							<p:commandButton id="toggler" type="button" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/columns')}" icon="fa fa-columns" iconPos="right"
+								styleClass="tableHeaderButtonLeft whiteIcon" />
+						</div>
+						<div class="ui-g-2 noPad center">
+							<h:outputText value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/businessObjects')}" styleClass="tableHeader" />
+						</div>
+						<div class="ui-g-5 noPad">
+							<p:commandButton id="addBusinessObject" title="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/addBusiness')}"
+								icon="fa fa-plus" iconPos="right" style="margin-left: 1px;"
+								oncomplete="PF('addBusinessObjectDialog').show();" update="#{p:resolveFirstComponentWithId('message', view).clientId}"
+								styleClass="tableHeaderButtonRight whiteIcon" />
+							<p:commandButton id="copyBusinessObject" title="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/copyBusinessObject')}"
+								icon="fa fa-copy" iconPos="right"
+								actionListener="#{logic.checkCopy}" update="#{p:resolveFirstComponentWithId('message', view).clientId}"
+								styleClass="tableHeaderButtonRight whiteIcon" />
+							<p:commandButton id="multiChangeSelected" alt="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/multipleStatusChange')}" 
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/multipleStatusChange')}"
+								icon="fa fa-edit" iconPos="right"
+								oncomplete="PF('multiChangeBusinessObjectDialog').show();"
+								styleClass="tableHeaderButtonRight whiteIcon" />
+							<p:commandButton id="deleteSelected" alt="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/deleteSelected')}" 
+								title="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/deleteSelected')}"
+								icon="fa fa-trash" iconPos="right"
+								oncomplete="PF('deleteBusinessObjectsDialog').show();"
+								styleClass="tableHeaderButtonRight whiteIcon" />
+							<p:commandButton value="Export" styleClass="tableHeaderButtonRight whiteIcon" ajax="false" title="Gefilterte Übersicht an Excel exportieren"
+								 icon="fa fa-file-excel-o" iconPos="right">
+				           		<p:dataExporter type="xlsx" target="businessObjectTable" fileName="BusinessObjects"  />
+				            </p:commandButton>
+							<p:columnToggler datasource="businessObjectTable" trigger="toggler">
+								<p:ajax event="toggle"
+									listener="#{data.stateDataTableBean.columnVisibilityChanged}"
+									process="businessObjectTable" oncomplete="resetFilter()" />
+							</p:columnToggler>
+						</div>
+					</f:facet>
+					<p:column selectionMode="multiple" exportable="false" toggleable="false" style="width: 10px; text-align: center" selectRow="false" />		
+					<!-- Adding Column STEP 2 -->	
+					<p:column id="productNameColumn" sortBy="#{businessObject.productName}"
+						filterBy="#{businessObject.productName}" headerText="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/productName')}"
+						styleClass="largeColumnCaseTable" selectRow="false"
+						exportable="#{data.stateDataTableBean.lazyModel.columnVisibility.get('productNameColumn')}"
+						visible="#{data.stateDataTableBean.lazyModel.columnVisibility.get('productNameColumn')}" >
+						<f:facet name="filter">
+							<p:inputText id="productNameFilter"
+								value="#{data.stateDataTableBean.lazyModel.filterText.get('productName')}"
+								onchange="PF('businessObjectTable').filter()" />
+						</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{businessObject.productName}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="#{businessObject.productName}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column id="businessObjectStatusColumn" sortBy="#{businessObject.businessObjectStatus}" resizable="false"
+						filterBy="#{businessObject.businessObjectStatus}" headerText="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/state')}"
+						styleClass="stateColumnCaseTable" selectRow="false"
+						exportable="#{data.stateDataTableBean.lazyModel.columnVisibility.get('businessObjectStatusColumn')}"
+						visible="#{data.stateDataTableBean.lazyModel.columnVisibility.get('businessObjectStatusColumn')}" >
+						<f:facet name="filter">
+							<p:selectCheckboxMenu id="businessObjectStatusFilter" style="width: 100px"
+								value="#{data.stateDataTableBean.lazyModel.filterText.get('businessObjectStatus')}" widgetVar="businessObjectStatusFilter"
+								styleClass="custom-filter" converter="pojoConverter" label="#{data.stateDataTableBean.lazyModel.filterText.get('businessObjectStatus') == null ? '---' : 'Filtered'}"
+								onchange="PF('businessObjectTable').filter();" onHide="updateSelectOneMenuFilters();" >
+								<f:selectItems value="#{enumBean.businessObjectStatusValues}" var="state"
+									itemLabel="#{state.getCmsName()}" />
+							</p:selectCheckboxMenu>
+						</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+									<p:outputLabel value="#{businessObject.businessObjectStatus.getCmsName()}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:selectOneMenu id="businessObjectStatus" styleClass="cellInputPart"
+										value="#{businessObject.businessObjectStatus}"
+										converter="pojoConverter">
+									<f:selectItems value="#{enumBean.businessObjectStatusValues}" var="status" itemLabel="#{status.getCmsName()}" />
+								</p:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column id="validThroughColumn" sortBy="#{businessObject.validThrough}" resizable="false"
+						filterBy="#{businessObject.validThrough}" headerText="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/validThrough')}" selectRow="false"
+						exportable="#{data.stateDataTableBean.lazyModel.columnVisibility.get('validThroughColumn')}"
+						visible="#{data.stateDataTableBean.lazyModel.columnVisibility.get('validThroughColumn')}"
+						styleClass="testDateColumnCaseTable" >
+						<f:facet name="filter">
+							<p:datePicker selectionMode="range"
+								value="#{data.stateDataTableBean.lazyModel.filterText.get('validThrough')}"
+								pattern="dd.MM.yyyy" styleClass="custom-filter width200px">
+								<p:ajax event="dateSelect"
+									oncomplete="PF('businessObjectTable').filter()" />
+								<p:ajax event="change"
+									oncomplete="PF('businessObjectTable').filter()" />
+							</p:datePicker>
+						</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{businessObject.validThrough}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</p:outputLabel>
+							</f:facet>
+							<f:facet name="input">
+								<p:datePicker value="#{businessObject.validThrough}" pattern="dd.MM.yyyy" />
+							</f:facet>
+						</p:cellEditor>	
+					</p:column>
+					
+					<p:column id="orderDateColumn" sortBy="#{businessObject.orderDate}" resizable="false"
+						filterBy="#{businessObject.orderDate}" headerText="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/orderDate')}" selectRow="false"
+						exportable="#{data.stateDataTableBean.lazyModel.columnVisibility.get('orderDateColumn')}"
+						visible="#{data.stateDataTableBean.lazyModel.columnVisibility.get('orderDateColumn')}"
+						styleClass="testDateColumnCaseTable" >
+						<f:facet name="filter">
+							<p:datePicker selectionMode="range"
+								value="#{data.stateDataTableBean.lazyModel.filterText.get('orderDate')}"
+								pattern="dd.MM.yyyy" styleClass="custom-filter width200px">
+								<p:ajax event="dateSelect"
+									oncomplete="PF('businessObjectTable').filter()" />
+								<p:ajax event="change"
+									oncomplete="PF('businessObjectTable').filter()" />
+							</p:datePicker>
+						</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{businessObject.orderDate}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</p:outputLabel>
+							</f:facet>
+							<f:facet name="input">
+								<p:datePicker value="#{businessObject.orderDate}" pattern="dd.MM.yyyy" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column id="deliveryDateColumn" sortBy="#{businessObject.deliveryDate}" resizable="false"
+						filterBy="#{businessObject.deliveryDate}" headerText="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/deliveryDate')}" selectRow="false"
+						exportable="#{data.stateDataTableBean.lazyModel.columnVisibility.get('deliveryDateColumn')}"
+						visible="#{data.stateDataTableBean.lazyModel.columnVisibility.get('deliveryDateColumn')}"
+						styleClass="testDateColumnCaseTable" >
+						<f:facet name="filter">
+							<p:datePicker selectionMode="range"
+								value="#{data.stateDataTableBean.lazyModel.filterText.get('deliveryDate')}"
+								pattern="dd.MM.yyyy" styleClass="custom-filter width200px">
+								<p:ajax event="dateSelect"
+									oncomplete="PF('businessObjectTable').filter()" />
+								<p:ajax event="change"
+									oncomplete="PF('businessObjectTable').filter()" />
+							</p:datePicker>
+						</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{businessObject.deliveryDate}">
+									<f:convertDateTime pattern="dd.MM.yyyy" />
+								</p:outputLabel>
+							</f:facet>
+							<f:facet name="input">
+								<p:datePicker value="#{businessObject.deliveryDate}" pattern="dd.MM.yyyy" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>				
+													
+					<p:column id="quantityColumn" sortBy="#{businessObject.quantity}" resizable="false"
+						filterBy="#{businessObject.quantity}" headerText="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/quantity')}"
+						styleClass="zoneColumnCaseTable" selectRow="false"
+						exportable="#{data.stateDataTableBean.lazyModel.columnVisibility.get('quantityColumn')}"
+						visible="#{data.stateDataTableBean.lazyModel.columnVisibility.get('quantityColumn')}" >
+						<f:facet name="filter">
+							<p:inputText
+								value="#{data.stateDataTableBean.lazyModel.filterText.get('quantity')}"
+								onchange="PF('businessObjectTable').filter()" />
+						</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{businessObject.quantity}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputNumber value="#{businessObject.quantity}" decimalPlaces="0" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column id="qualityColumn" sortBy="#{businessObject.quality}"	resizable="false"
+						filterBy="#{businessObject.quality}" headerText="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/quality')}"
+						styleClass="zoneColumnCaseTable" selectRow="false"
+						exportable="#{data.stateDataTableBean.lazyModel.columnVisibility.get('qualityColumn')}"
+						visible="#{data.stateDataTableBean.lazyModel.columnVisibility.get('qualityColumn')}" >
+						<f:facet name="filter">
+							<p:selectCheckboxMenu id="qualityFilter" style="width: 100px"
+								value="#{data.stateDataTableBean.lazyModel.filterText.get('quality')}" widgetVar="qualityFilter"
+								styleClass="custom-filter" converter="pojoConverter" label="#{data.stateDataTableBean.lazyModel.filterText.get('quality') == null ? '---' : 'Filtered'}"
+								onchange="PF('businessObjectTable').filter();" onHide="updateSelectOneMenuFilters();" >
+								<f:selectItems value="#{enumBean.qualityValues}" var="quality"
+									itemLabel="#{quality .getCmsName()}" />
+							</p:selectCheckboxMenu>
+						</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{businessObject.quality.getCmsName()}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:selectOneMenu id="qualityInput" styleClass="cellInputPart"
+										value="#{businessObject.quality}" converter="pojoConverter">
+									<f:selectItems value="#{enumBean.qualityValues}" var="quality" itemLabel="#{quality.getCmsName()}" />
+								</p:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column id="onSaleColumn" resizable="false"
+						sortBy="#{businessObject.onSale}" selectRow="false"
+						filterBy="#{businessObject.onSale}"
+						headerText="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/onSale')}" styleClass="shilderColumnCaseTable"
+						exportable="#{data.stateDataTableBean.lazyModel.columnVisibility.get('onSaleColumn')}"
+						visible="#{data.stateDataTableBean.lazyModel.columnVisibility.get('onSaleColumn')}" >
+						<f:facet name="filter">
+							<p:selectCheckboxMenu id="onSaleBoolFilter" style="width: 100px"
+								value="#{data.stateDataTableBean.lazyModel.filterText.get('onSale')}" widgetVar="onSaleFilter"
+								styleClass="custom-filter" converter="pojoConverter" label="#{data.stateDataTableBean.lazyModel.filterText.get('onSale') == null ? '---' : 'Filtered'}"
+								onchange="PF('businessObjectTable').filter();" onHide="updateSelectOneMenuFilters();" >
+								<f:selectItem itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/yes')}" itemValue="#{true}" />
+								<f:selectItem itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/no')}" itemValue="#{false}" />
+							</p:selectCheckboxMenu>
+						</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+								<p:outputLabel value="#{businessObject.onSale == true ? ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/yes') : (businessObject.onSale == false ? ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/no') : '')}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:selectOneMenu id="onSaleBoolInput" styleClass="cellInputPart"
+										value="#{businessObject.onSale}" converter="pojoConverter">
+									<f:selectItem itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/yes')}" itemValue="#{true}" />
+									<f:selectItem itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/no')}" itemValue="#{false}" />
+								</p:selectOneMenu>	
+							</f:facet>
+						</p:cellEditor>				
+					</p:column>
+				</p:dataTable>
+			</h:form>
+
+			<!-- Save filter dialog -->
+			<p:dialog id="saveProfileDialog" widgetVar="saveProfileDialog"
+				appendTo="@(body)" header="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/saveProfile')}" resizable="false"
+				modal="true" closeOnEscape="true" responsive="true">
+				<h:form id="profileSaveForm">
+					<h:panelGrid columns="2">
+						<p:outputLabel id="profileNameLabel" for="profileName"
+							value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/profileName')}" />
+						<p:inputText id="profileName" value="#{data.stateDataTableBean.newProfile.profileName}"
+							required="true" maxlength="20" />
+						<p:outputLabel id="profileTypeLabel" for="profileType"
+							value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/profilType')}" />
+						<p:selectOneRadio id="profileType" required="true"
+							value="#{data.stateDataTableBean.newProfile.profileType}">
+							<f:selectItem id="onlyMe" itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/onlyMe')}" itemValue="ONLY_ME" />
+							<f:selectItem id="allUsers"
+								itemDisabled="#{!data.isProfileAdmin}" itemLabel="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/allUsers')}"
+								itemValue="ALL_USERS" />
+						</p:selectOneRadio>
+					</h:panelGrid>
+					<h:panelGroup layout="block">
+						<p:commandButton id="saveFilter" value="#{ivy.cms.co('/ch.ivy.addon.portalkit.ui.jsf/common/ok')}" process="@form" 
+							oncomplete="if (args &amp;&amp; !args.validationFailed) {PF('saveProfileDialog').hide()}" style="float:right" styleClass="buttonMargin"
+							actionListener="#{data.stateDataTableBean.saveProfile()}" update="profileSaveForm #{p:resolveFirstComponentWithId('businessObjectPanel', view).clientId} #{p:resolveFirstComponentWithId('message', view).clientId}">
+						</p:commandButton>
+						<p:spacer width="5px" />
+						<p:commandButton type="button" value="#{ivy.cms.co('/ch.ivy.addon.portalkit.ui.jsf/common/cancel')}" style="float:right"
+							onclick="PF('saveProfileDialog').hide();">
+						</p:commandButton>
+					</h:panelGroup>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog id="copyBusinessObjectDialog" widgetVar="copyBusinessObjectDialog" resizable="false" width="350"
+				appendTo="@(body)" modal="true" header="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/copy')}" >
+				<h:form id="copyObjectDialogForm" >
+					<div class="ui-g">
+						<div class="ui-g-5">
+							<p:outputLabel value="Number of copies" />
+						</div>
+						<div class="ui-g-7">
+							<p:spinner value="#{data.numberOfCopies}" stepFactor="1" styleClass="copySpinner" max="99" min="1" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:commandButton id="copyBusinessObject" value="Ok" styleClass="buttonMargin"
+									icon="fa fa-check" iconPos="right" onclick="PF('copyBusinessObjectDialog').hide();"
+									actionListener="#{logic.copyBusinessObject}" update="#{p:resolveFirstComponentWithId('businessObjectTable', view).clientId}" style="float:right" />	
+							<p:commandButton value="Cancel" icon="fa fa-times" iconPos="right" style="float:right"
+									onclick="PF('copyBusinessObjectDialog').hide();" type="button" />
+						</div>
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog id="addBusinessObjectDialog" widgetVar="addBusinessObjectDialog" resizable="false" width="450"
+				appendTo="@(body)" modal="true" header="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/addNewBusiness')}" >
+				<h:form id="addBusinessObjectDialogForm" >
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel for="productName" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/productName')}" />
+						</div>
+						<div class="ui-g-4">
+							<p:inputText id="productName" value="#{data.businessObject.productName}" required="true" requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/required')} #{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/productName')}" />
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel for="status" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/state')}" />
+						</div>
+						<div class="ui-g-4">
+							<p:selectOneMenu id="status" value="#{data.businessObject.businessObjectStatus}" converter="pojoConverter" 
+									required="true" requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/required')} #{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/state')}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{enumBean.businessObjectStatusValues}" var="status" itemLabel="#{status.getCmsName()}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel for="validThrough" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/validThrough')}" />
+						</div>
+						<div class="ui-g-4">
+							<p:datePicker id="validThrough" value="#{data.businessObject.validThrough}" pattern="dd.MM.yyyy"
+									required="true" requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/required')} #{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/validThrough')}" />
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel for="orderDate" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/orderDate')}" />
+						</div>
+						<div class="ui-g-4">
+							<p:datePicker id="orderDate" value="#{data.businessObject.orderDate}" pattern="dd.MM.yyyy"
+									required="true" requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/required')} #{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/orderDate')}" />
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel for="deliveryDate" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/deliveryDate')}" />
+						</div>
+						<div class="ui-g-4">
+							<p:datePicker id="deliveryDate" value="#{data.businessObject.deliveryDate}" pattern="dd.MM.yyyy"
+									required="true" requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/required')} #{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/deliveryDate')}" />
+						</div>
+					</div>	
+					
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel for="quantity" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/quantity')}" />
+						</div>
+						<div class="ui-g-4">
+							<p:inputNumber id="quantity" value="#{data.businessObject.quantity}" decimalPlaces="0"
+									required="true" requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/required')} #{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/quantity')}" />
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel for="quality" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/quality')}" />
+						</div>
+						<div class="ui-g-4">
+							<p:selectOneMenu id="quality" value="#{data.businessObject.quality}" converter="pojoConverter" 
+									required="true" requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/required')} #{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/quality')}">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{enumBean.qualityValues}" var="quality" itemLabel="#{quality.getCmsName()}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel for="onSale" value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/onSale')}" />
+						</div>
+						<div class="ui-g-4">
+							<p:selectBooleanCheckbox id="onSale" value="#{data.businessObject.onSale}" />
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:commandButton id="addBusinessObject" value="Ok" styleClass="buttonMargin"
+									icon="fa fa-check" iconPos="right" oncomplete="if (args &amp;&amp; !args.validationFailed) PF('addBusinessObjectDialog').hide();"
+									actionListener="#{logic.addBusinessObject}" update="#{p:resolveFirstComponentWithId('businessObjectTable', view).clientId} #{p:resolveFirstComponentWithId('message', view).clientId} addBusinessObjectDialogForm" style="float:right" />	
+							<p:commandButton value="Cancel" icon="fa fa-times" iconPos="right" style="float:right"
+									onclick="PF('addBusinessObjectDialog').hide();" type="button" />
+						</div>
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog id="multiChangeBusinessObjectDialog" widgetVar="multiChangeBusinessObjectDialog" resizable="false" width="350"
+				appendTo="@(body)" modal="true" header="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/multichange')}" >
+				<h:form id="multiChangeObjectDialogForm" >
+					<div class="ui-g">
+						<div class="ui-g-4">
+							<p:outputLabel value="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/newState')}" />
+						</div>
+						<div class="ui-g-4">
+							<p:selectOneMenu id="businessObjectStatusMultiChange" style="width: 100px" 
+								required="true" requiredMessage="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/required')} #{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/newState')}"
+								value="#{data.multiChangeState}" widgetVar="businessObjectStatusMultiChange"
+								converter="pojoConverter">
+								<f:selectItem noSelectionOption="true" />
+								<f:selectItems value="#{enumBean.businessObjectStatusValues}" var="state"
+									itemLabel="#{state.getCmsName()}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+					<div class="ui-g">
+						<div class="ui-g-12">
+							<p:commandButton id="multiChangeBusinessObject" value="Ok" styleClass="buttonMargin"
+									icon="fa fa-check" iconPos="right" oncomplete="if (args &amp;&amp; !args.validationFailed) PF('multiChangeBusinessObjectDialog').hide();"
+									actionListener="#{logic.multiChangeBusinessObject}" update="#{p:resolveFirstComponentWithId('businessObjectTable', view).clientId} #{p:resolveFirstComponentWithId('message', view).clientId} multiChangeObjectDialogForm" style="float:right" />	
+							<p:commandButton value="Cancel" icon="fa fa-times" iconPos="right" style="float:right"
+									onclick="PF('multiChangeBusinessObjectDialog').hide();" type="button" />
+						</div>
+					</div>
+				</h:form>
+			</p:dialog>
+			
+			<p:confirmDialog id="deleteBusinessObjectsDialog"
+			    message="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/deletionMessage')}"
+			    header="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/deletionHeader')}"
+			    widgetVar="deleteBusinessObjectsDialog" appendTo="@(body)" severity="alert" responsive="true">
+			    <p:commandButton value="#{ivy.cms.co('/Labels/no')}" styleClass="buttonMargin"
+			      onclick="PF('deleteBusinessObjectsDialog').hide();" type="button" />
+			    <p:commandButton id="confirmDODelete" value="#{ivy.cms.co('/Labels/yes')}"
+			      actionListener="#{logic.deleteSelected}"
+			      oncomplete="PF('deleteBusinessObjectsDialog').hide();PF('businessObjectTable').filter();" 
+			      update="#{p:resolveFirstComponentWithId('businessObjectTable', view).clientId}" />
+			  </p:confirmDialog>
+			
+			<p:confirmDialog id="deleteProfileConfirmationDialog"
+			    message="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/deleteProfileMessage')}"
+			    header="#{ivy.cms.co('/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/deleteProfileHeader')}"
+			    widgetVar="deleteProfileConfirmationDialog" appendTo="@(body)" severity="alert" responsive="true">
+			    <p:commandButton value="#{ivy.cms.co('/ch.ivy.addon.portalkit.ui.jsf/common/no')}" styleClass="buttonMargin"
+			      onclick="PF('deleteProfileConfirmationDialog').hide();" type="button" />
+			    <p:commandButton id="confirmDelete" value="#{ivy.cms.co('/ch.ivy.addon.portalkit.ui.jsf/common/yes')}"
+			      actionListener="#{data.stateDataTableBean.deleteProfile()}"
+			      oncomplete="PF('deleteProfileConfirmationDialog').hide()"
+			       update="#{p:resolveFirstComponentWithId('businessObjectPanel', view).clientId}" />
+			  </p:confirmDialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
