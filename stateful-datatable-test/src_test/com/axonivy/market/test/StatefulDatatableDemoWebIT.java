@@ -18,7 +18,6 @@ import org.openqa.selenium.By;
 import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
 
-import ch.ivyteam.ivy.environment.AppFixture;
 import ch.ivyteam.ivy.environment.IvyTest;
 import ch.ivyteam.ivy.security.IUser;
 
@@ -45,10 +44,8 @@ public class StatefulDatatableDemoWebIT {
 
 	@Test
 	@Order(2)
-	public void showDatatableRepo(AppFixture fixture, @Named("tester") IUser tester) {
+	public void showDatatableRepo(@Named("tester") IUser tester) {
 		assertThat(tester.getDisplayName()).isEqualTo("Tester");
-		
-		fixture.loginUser(tester);
 		
 		open(EngineUrl.base() + "default-workflow/faces/loginTable.xhtml");
 
