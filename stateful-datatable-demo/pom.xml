@@ -9,8 +9,8 @@
   <dependencies>
     <dependency>
       <groupId>com.axonivy.portal</groupId>
-      <artifactId>portal</artifactId>
-      <version>[9.4.0,)</version>
+      <artifactId>portal-components</artifactId>
+      <version>9.4.0</version>
       <type>iar</type>
     </dependency>
   </dependencies>

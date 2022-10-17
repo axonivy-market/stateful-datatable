@@ -19,7 +19,6 @@ public class BusinessObjectDatabaseDAO extends AbstractEntityDAO<BusinessObject>
 
 	@Override
 	public long getQueryRowCount(ch.ivyteam.ivy.business.data.store.search.Query<BusinessObject> query) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

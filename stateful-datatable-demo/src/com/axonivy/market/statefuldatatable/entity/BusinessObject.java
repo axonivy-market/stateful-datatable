@@ -18,10 +18,7 @@ import com.axonivy.market.statefuldatatable.enums.Availability;
 import com.axonivy.market.statefuldatatable.enums.BusinessObjectStatus;
 import com.axonivy.market.statefuldatatable.enums.Quality;
 
-/**
- * @author david.merunko
- *
- */
+
 @Entity
 public class BusinessObject extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
@@ -29,7 +26,7 @@ public class BusinessObject extends AbstractEntity {
 	@Id
 	@Column(length = 32, nullable = false) 
 	@GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id;
 	//Adding Column STEP 1
 	@Column
