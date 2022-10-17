@@ -10,11 +10,6 @@ import java.util.Map.Entry;
 import javax.el.ValueExpression;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.ToggleEvent;
@@ -26,8 +21,8 @@ import org.primefaces.model.Visibility;
 import org.primefaces.model.filter.FilterConstraint;
 
 import com.axonivy.market.statefuldatatable.dao.DaoServiceRegistry;
-import com.axonivy.market.statefuldatatable.entity.BusinessObject;
-import com.axonivy.market.statefuldatatable.enums.BusinessObjectStatus;
+import com.axonivy.market.statefuldatatable.entity.Product;
+import com.axonivy.market.statefuldatatable.enums.ProductStatus;
 import com.axonivy.market.statefuldatatable.enums.Quality;
 import com.axonivy.market.statefuldatatable.service.DateService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,6 +33,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import ch.ivyteam.ivy.business.data.store.search.Filter;
+import ch.ivyteam.ivy.business.data.store.search.OrderByOperation.Direction;
+import ch.ivyteam.ivy.business.data.store.search.Query;
 import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.DateTime;
 import ch.ivyteam.ivy.security.IUser;
@@ -49,14 +47,14 @@ import ch.ivyteam.ivy.security.IUser;
  * @author david.merunko
  *
  */
-public class BusinessObjectDatabaseLazyDataModel extends LazyDataModel<BusinessObject> implements BusinessObjectLazyDataModel {
+public class ProductRepoLazyDataModel extends LazyDataModel<Product> implements ProductLazyDataModel {
 	private static final long serialVersionUID = 1L;
-	public static final String TABLE_LAZY_PREFIX = "form:businessObjectTable:";
-	public static final String TABLE_UI_PATH = "form:businessObjectTable";
+	public static final String TABLE_LAZY_PREFIX = "form:productTable:";
+	public static final String TABLE_UI_PATH = "form:productTable";
 	//Adding Column STEP 3
 	//Dropdown filters
 	public static final String QUALITY_FILTER = "quality";
-	public static final String BUSINESS_OBJECT_STATUS_FILTER = "businessObjectStatus";
+	public static final String BUSINESS_OBJECT_STATUS_FILTER = "productStatus";
 	public static final String AVAILABILITY_FILTER = "availability";
 	//Date filters
 	public static final String VALID_THROUGH_FILTER = "validThrough";
@@ -84,13 +82,14 @@ public class BusinessObjectDatabaseLazyDataModel extends LazyDataModel<BusinessO
 	private boolean tableDefault = true;
 	
 	@Override
-    public BusinessObject getRowData(String rowKey) {
-		return DaoServiceRegistry.getBusinessObjectDatabaseDAO().getById(rowKey);
+    public Product getRowData(String rowKey) {
+		return DaoServiceRegistry.getProductRepoDAO().getById(rowKey);
+		//return Ivy.repo().search(Product.class).textField("id").containsPhrase(rowKey).execute().getFirst();
     }
 
     @Override
-    public String getRowKey(BusinessObject businessObject) {
-        return String.valueOf(businessObject.getId());
+    public String getRowKey(Product product) {
+        return String.valueOf(product.getId());
     }
     
     /**
@@ -108,6 +107,8 @@ public class BusinessObjectDatabaseLazyDataModel extends LazyDataModel<BusinessO
 		return filterFromIUserMap;
 	}
 	
+
+
 	@Override
 	public int count(Map<String, FilterMeta> filterBy) {
 		// TODO Auto-generated method stub
@@ -119,7 +120,8 @@ public class BusinessObjectDatabaseLazyDataModel extends LazyDataModel<BusinessO
 	 * filter and sorting.
 	 */
 	@Override
-	public List<BusinessObject> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+	public List<Product> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+		//First time the table is loaded, we use the filters from IUser
 		if (filterBy.isEmpty() && sortBy.size() == 2 && !columnVisibility.containsValue(false)
 				&& sortBy.get(PRODUCT_NAME_FILTER) != null
 				&& sortBy.get(PRODUCT_NAME_FILTER).getOrder() == SortOrder.DESCENDING
@@ -129,7 +131,7 @@ public class BusinessObjectDatabaseLazyDataModel extends LazyDataModel<BusinessO
 		} else {
 			tableDefault = false;
 		}
-		
+
 		//First time the table is loaded, we use the filters from IUser
 		if(useSavedFilters && filtersFromIUser != null) {
 			filterBy = filtersFromIUser;
@@ -142,46 +144,42 @@ public class BusinessObjectDatabaseLazyDataModel extends LazyDataModel<BusinessO
 				sortBy.put(sortMeta.getField(), sortMeta);
 			}
 			useSavedSorting = false;
-		}		
-			
-		//Setup for database query
-		CriteriaBuilder cb = DaoServiceRegistry.getBusinessObjectDatabaseDAO().getCriteriaBuilder();
-		CriteriaQuery<BusinessObject> cr = cb.createQuery(BusinessObject.class);
-		Root<BusinessObject> root = cr.from(BusinessObject.class);
-		List<Predicate> predicates = new ArrayList<>();
+		}
 		
-		//Adding Column STEP 4
+		//Setup for business data repo query
+		Query<Product> query = Ivy.repo().search(Product.class);
 		//Filtering based on the table columns
-		addStringContainsQueryFilter(predicates, cb, root, PRODUCT_NAME_FILTER, filterBy);
+		//Adding Column STEP 4
+		addStringContainsQueryFilter(query, PRODUCT_NAME_FILTER, filterBy);
 
-		addNumberRangeQueryFilter(predicates, cb, root,  QUANTITY_FILTER, filterBy);
+		addNumberRangeQueryFilter(query, QUANTITY_FILTER, filterBy);
 		
-		addDateRangeQueryFilter(predicates, cb, root, VALID_THROUGH_FILTER, filterBy, false);
-		addDateRangeQueryFilter(predicates, cb, root, ORDER_DATE_FILTER, filterBy, false);
-		addDateRangeQueryFilter(predicates, cb, root, DELIVERY_DATE_FILTER, filterBy, false);
+		addDateRangeQueryFilter(query, VALID_THROUGH_FILTER, filterBy, false);
+		addDateRangeQueryFilter(query, ORDER_DATE_FILTER, filterBy, false);
+		addDateRangeQueryFilter(query, DELIVERY_DATE_FILTER, filterBy, false);
 		
-		addSelectOneMenuQueryFilter(predicates, cb, root,  AVAILABILITY_FILTER, filterBy);
-		addSelectOneMenuQueryFilter(predicates, cb, root, QUALITY_FILTER, filterBy);
-		addSelectOneMenuQueryFilter(predicates, cb, root, BUSINESS_OBJECT_STATUS_FILTER, filterBy);
+		addSelectOneMenuQueryFilter(query, AVAILABILITY_FILTER, filterBy);
+		addSelectOneMenuQueryFilter(query, QUALITY_FILTER, filterBy);
+		addSelectOneMenuQueryFilter(query, BUSINESS_OBJECT_STATUS_FILTER, filterBy);
 		
-		addBooleanQueryFilter(predicates, cb, root, ON_SALE_FILTER, filterBy);
-
-		List<Order> orderList = new ArrayList<>();
+		addBooleanQueryFilter(query, ON_SALE_FILTER, filterBy);
+		
 		//Ordering with Sort Meta
 		if(sortBy != null) {
 			for(Entry<String, SortMeta> sortMeta : sortBy.entrySet()) {
-				if(sortMeta.getValue().getOrder() == SortOrder.DESCENDING) {
-					orderList.add(cb.desc(root.get(sortMeta.getValue().getField())));
+				if(sortMeta.getValue().getOrder() == SortOrder.UNSORTED) {
+					continue;
+				}
+				if(PRODUCT_NAME_FILTER.equals(sortMeta.getValue().getField())) {
+					query.orderBy().textField(sortMeta.getValue().getField()).direction(Direction.valueOf(sortMeta.getValue().getOrder().name()));
 				} else {
-					orderList.add(cb.asc(root.get(sortMeta.getValue().getField())));
+					query.orderBy().field(sortMeta.getValue().getField()).direction(Direction.valueOf(sortMeta.getValue().getOrder().name()));
 				}
 			}
 		}
 		
-		cr.select(root).where(predicates.toArray(new Predicate[0])).orderBy(orderList);
-		List<BusinessObject> result = DaoServiceRegistry.getBusinessObjectDatabaseDAO().getByCriteriaQuery(cr, first, pageSize);
-		setRowCount(DaoServiceRegistry.getBusinessObjectDatabaseDAO().getByCriteriaQuery(cr).size());
-		//setRowCount(10);
+		List<Product> result = DaoServiceRegistry.getProductRepoDAO().callQueryWithLimit(query, first, pageSize);
+		setRowCount((int) DaoServiceRegistry.getProductRepoDAO().getQueryRowCount(query));
 		//Saving the filters and sorting
 		saveFilterStateAndvalueIntoIUser(filterBy);
 		saveSortMetaIntoIUser(sortBy);
@@ -195,96 +193,112 @@ public class BusinessObjectDatabaseLazyDataModel extends LazyDataModel<BusinessO
 		return result;
 	}
 	
-	public BusinessObject updateBusinessObject(BusinessObject businessObject, List<Object> newObjects,
+	public Product updateProduct(Product product, List<Object> newObjects,
 			String field) throws InterruptedException {
 		//Adding Column STEP 5
 		if (field.contains("productName")) {
-			businessObject.setProductName((String) newObjects.get(0));
-		} else if (field.contains("businessObjectStatus")) {
-			businessObject.setBusinessObjectStatus((BusinessObjectStatus) newObjects.get(0));
+			product.setProductName((String) newObjects.get(0));
+		} else if (field.contains("productStatus")) {
+			product.setProductStatus((ProductStatus) newObjects.get(0));
 		} else if (field.contains("validThrough")) {
 			DateTime dateTime = (DateTime) newObjects.get(0);
-			businessObject.setValidThrough(dateTime.toJavaDate());
+			product.setValidThrough(dateTime.toJavaDate());
 		} else if (field.contains("orderDate")) {
 			DateTime dateTime = (DateTime) newObjects.get(0);
 			//Example validation
-			if(dateTime.toJavaDate().after(businessObject.getDeliveryDate())) {
+			if(dateTime.toJavaDate().after(product.getDeliveryDate())) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Ivy.cms().co("/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/Error/deliveryDateBeforeOrderDate"), null));
-				return businessObject;
+				return product;
 			}
-			businessObject.setOrderDate(dateTime.toJavaDate());
+			product.setOrderDate(dateTime.toJavaDate());
 		} else if (field.contains("deliveryDate")) {
 			DateTime dateTime = (DateTime) newObjects.get(0);
 			//Example validation
-			if(dateTime.toJavaDate().before(businessObject.getOrderDate())) {
+			if(dateTime.toJavaDate().before(product.getOrderDate())) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, Ivy.cms().co("/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/Error/deliveryDateBeforeOrderDate"), null));
-				return businessObject;
+				return product;
 			}
-			businessObject.setDeliveryDate(dateTime.toJavaDate());
+			product.setDeliveryDate(dateTime.toJavaDate());
 		} else if (field.contains("quantity")) {
-			businessObject.setQuantity((Integer) newObjects.get(0));
+			product.setQuantity((Integer) newObjects.get(0));
 		} else if (field.contains("quality")) {
-			businessObject.setQuality((Quality) newObjects.get(0));
+			product.setQuality((Quality) newObjects.get(0));
 		} else if (field.contains("onSale")) {
-			businessObject.setOnSale((Boolean) newObjects.get(0));
+			product.setOnSale((Boolean) newObjects.get(0));
 		}
 
-		DaoServiceRegistry.getBusinessObjectDatabaseDAO().save(businessObject);
+		DaoServiceRegistry.getProductRepoDAO().save(product);
 
 		Thread.sleep(1000);
 
-		return businessObject;
+		return product;
 	}
 	
-	public void deleteOrder(BusinessObject businessObject) {
-		DaoServiceRegistry.getBusinessObjectDatabaseDAO().delete(businessObject);
+	public void deleteOrder(Product product) {
+		DaoServiceRegistry.getProductRepoDAO().delete(product);
 	}
 	
-	public void saveBusinessObject(BusinessObject businessObject) {
-		DaoServiceRegistry.getBusinessObjectDatabaseDAO().save(businessObject);
-	}
+	public void saveProduct(Product product) {
+		DaoServiceRegistry.getProductRepoDAO().save(product);
+	}	
 	
-	private void addSelectOneMenuQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<BusinessObject> root, String filterName, Map<String, FilterMeta> filters) {
+	private void addSelectOneMenuQueryFilter(Query<Product> query, String filterName, Map<String, FilterMeta> filters) {
 		if(filters.get(filterName) != null) {
 			if(filters.get(filterName).getFilterValue() instanceof ArrayList) {
 				ArrayList<String> statusArray = (ArrayList<String>) filters.get(filterName).getFilterValue();
 				if(!statusArray.isEmpty()) {
-					predicates.add(cb.in(root.get(filterName)).value(statusArray));
+					String words = "";
+					for(String status : statusArray) {
+						words += "*" + status + "* ";
+					}
+					query.textField(filterName).containsAnyWords(words);
 				}
 			}
 			if(filters.get(filterName).getFilterValue() instanceof Object[]) {
 				Object[] statusArray = (Object[]) filters.get(filterName).getFilterValue();
-
 				if(statusArray.length != 0 && statusArray[0] != null) {
-					predicates.add(root.get(filterName).in(statusArray));
+					String words = "";
+					for(Object state : statusArray) {
+						words += "*" + ((Enum<?>) state).name() + "* ";
+					}
+					query.textField(filterName).containsAnyWords(words);
 				}
 			}
 			
 		}
 	}
 	
-	private void addBooleanQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<BusinessObject> root, String filterName, Map<String, FilterMeta> filters) {
+	private void addBooleanQueryFilter(Query<Product> query, String filterName, Map<String, FilterMeta> filters) {
 		if(filters.get(filterName) != null) {
 			if(filters.get(filterName).getFilterValue() instanceof Object[]) {
 				Object[] statusArray = (Object[]) filters.get(filterName).getFilterValue();
 				if(statusArray.length != 0 && statusArray[0] != null) {
-					predicates.add(root.get(filterName).in(statusArray));
+					Filter<Product> userFilter = null;
+					for(Object state : statusArray) {
+						if(userFilter == null) {
+							userFilter = Ivy.repo().search(Product.class).booleanField(filterName).isEqualTo((Boolean) state);
+						} else {
+							userFilter.or().booleanField(filterName).isEqualTo((Boolean) state);
+						}
+					}
+					query.filter(userFilter);
 				}
 			}
+			
 		}
 	}
 	
-	private void addNumberRangeQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<BusinessObject> root, String filterName, Map<String, FilterMeta> filters) {
+	private void addNumberRangeQueryFilter(Query<Product> query, String filterName, Map<String, FilterMeta> filters) {
 		if(filters.get(filterName) != null) {
 			String[] amounts = filters.get(filterName).getFilterValue().toString().split("-");
 			if(amounts.length > 1 && amounts[0].length() > 0 && amounts[1].length() > 0) {
 				Double amountFrom = Double.parseDouble(amounts[0]);
 				Double amountTo = Double.parseDouble(amounts[1]);
-				predicates.add(cb.and(cb.ge(root.get(filterName), amountFrom), cb.le(root.get(filterName), amountTo)));
+				query.numberField(filterName).isGreaterOrEqualTo(amountFrom).and().numberField(filterName).isLessOrEqualTo(amountTo);
 			} else {
 				try {
 					Double number = Double.parseDouble(filters.get(filterName).getFilterValue().toString().replace("-", ""));
-					predicates.add(cb.between(root.get(filterName), number-0.01, number+0.01));
+					query.numberField(filterName).isBetween(number-0.01, number+0.01);
 				} catch(NumberFormatException e) {
 					Ivy.log().error("Filterwert ist keine Zahl");
 				}
@@ -292,17 +306,18 @@ public class BusinessObjectDatabaseLazyDataModel extends LazyDataModel<BusinessO
 		}
 	}
 	
-	private void addStringContainsQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<BusinessObject> root, String filterName, Map<String, FilterMeta> filters) {
+	private void addStringContainsQueryFilter(Query<Product> query, String filterName, Map<String, FilterMeta> filters) {
 		if(filters.get(filterName) != null) {
-			predicates.add(cb.like(root.get(filterName), "%" + filters.get(filterName).getFilterValue().toString() + "%"));
+			query.textField(filterName).containsAllWordPatterns("*" + filters.get(filterName).getFilterValue().toString() + "*");
 		}
 	}
 	
-	private void addDateRangeQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<BusinessObject> root, String filterName, Map<String, FilterMeta> filters, boolean checkStatus) {
-		if(filters.get(filterName) != null) {
+	private void addDateRangeQueryFilter(Query<Product> query, String filterName, Map<String, FilterMeta> filters, boolean checkStatus) {
+		if(filters.get(filterName) != null) {			
 			List<LocalDate> dateRange = (ArrayList<LocalDate>) filters.get(filterName).getFilterValue();
 			if(dateRange.size() > 1) {
-				predicates.add(cb.and(cb.greaterThanOrEqualTo(root.get(filterName), DateService.setTimeZero(dateRange.get(0))), cb.lessThanOrEqualTo(root.get(filterName), DateService.setTimeMidnight(dateRange.get(1)))));
+				Filter<Product> dateFilter = Ivy.repo().search(Product.class).dateTimeField(filterName).isAfterOrEqualTo(DateService.setTimeZero(dateRange.get(0))).and().dateTimeField(filterName).isBeforeOrEqualTo(DateService.setTimeMidnight(dateRange.get(1)));
+				query.filter(dateFilter);
 			}
 		}
 	}
@@ -338,7 +353,8 @@ public class BusinessObjectDatabaseLazyDataModel extends LazyDataModel<BusinessO
 	}
 	
 	/**
-	 * Save filter values into IUser as JSON 
+	 * Save filter values into IUser as JSON
+	 * @throws JsonProcessingException 
 	 */
 	private void saveFilterStateAndvalueIntoIUser(Map<String, FilterMeta> filters) {
 		Map<String, Map<String, FilterMeta>> searchFilterMap = new HashMap<>();

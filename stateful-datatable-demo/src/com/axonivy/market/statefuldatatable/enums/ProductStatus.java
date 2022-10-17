@@ -7,7 +7,7 @@ package com.axonivy.market.statefuldatatable.enums;
  * @author david.merunko
  *
  */
-public enum BusinessObjectStatus implements HasCmsName {
+public enum ProductStatus implements HasCmsName {
 	REQUESTED,
 	IN_PRODUCTION,
 	SHIPPED,

@@ -10,7 +10,7 @@ com:
               name: In stock
             UNAVAILABLE:
               name: Unavailable
-          BusinessObjectStatus:
+          ProductStatus:
             DELIVERED:
               name: Delivered
             IN_PRODUCTION:
@@ -38,19 +38,19 @@ Dialogs:
               Error:
                 deliveryDateBeforeOrderDate: Delivery date cannot be before Order date
               actions: Actions
-              addBusiness: Add Business Object
-              addNewBusiness: Add new Business Object
+              addBusiness: Add Product
+              addNewBusiness: Add new Product
               allUsers: All Users
-              businessObjects: Business Objects
+              products: List of products
               columns: Columns
               copy: Copy
-              copyBusinessObject: Copy business object
+              copyProduct: Copy Product
               delete: Delete
               deleteProfileHeader: Profile Deletion
               deleteProfileMessage: Are you sure you want to delete this profile?
               deleteSelected: Delete selected
-              deletionHeader: Deleting business objects
-              deletionMessage: Do you want to delete all the selected business objects?
+              deletionHeader: Deleting products
+              deletionMessage: Do you want to delete all the selected products?
               deliveryDate: Delivery Date
               id: ID
               multichange: Multichange

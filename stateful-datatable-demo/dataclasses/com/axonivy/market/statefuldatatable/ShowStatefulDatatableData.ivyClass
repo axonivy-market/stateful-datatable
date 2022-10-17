@@ -1,3 +1,3 @@
 ShowStatefulDatatableData #class
 com.axonivy.market.statefuldatatable #namespace
-lazyModel com.axonivy.market.statefuldatatable.ui.BusinessObjectLazyDataModel #field
+lazyModel com.axonivy.market.statefuldatatable.ui.ProductLazyDataModel #field

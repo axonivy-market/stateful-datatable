@@ -25,10 +25,10 @@ import org.primefaces.model.FilterMeta;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
 
-import com.axonivy.market.statefuldatatable.entity.BusinessObject;
+import com.axonivy.market.statefuldatatable.entity.Product;
 import com.axonivy.market.statefuldatatable.entity.Profile;
 import com.axonivy.market.statefuldatatable.enums.Availability;
-import com.axonivy.market.statefuldatatable.enums.BusinessObjectStatus;
+import com.axonivy.market.statefuldatatable.enums.ProductStatus;
 import com.axonivy.market.statefuldatatable.enums.ProfileType;
 import com.axonivy.market.statefuldatatable.enums.Quality;
 import com.axonivy.market.statefuldatatable.service.ProfileService;
@@ -55,15 +55,15 @@ public class StateDataTableBean {
 	public static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss zzz yyyy";
 	public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(DATE_FORMAT);
 	
-	private BusinessObjectLazyDataModel lazyModel = new BusinessObjectRepoLazyDataModel();
+	private ProductLazyDataModel lazyModel = new ProductRepoLazyDataModel();
 	private List<Profile> publicProfiles;
 	private List<Profile> privateProfiles;
 	private Profile selectedProfile = null;
 	private Profile newProfile = new Profile();
 	private boolean profileChanged = false;
 	private Profile profileToDelete;
-	private BusinessObject selectedBusinessObject = new BusinessObject();
-	private List<BusinessObjectStatus> businessObjectStatusList = new ArrayList<BusinessObjectStatus>();
+	private Product selectedProduct = new Product();
+	private List<ProductStatus> productStatusList = new ArrayList<ProductStatus>();
 
 	/**
 	 * In the postconstruct method filter, sort and column data are loaded
@@ -106,17 +106,17 @@ public class StateDataTableBean {
 			for(Entry<String, FilterMeta> filter : filters.entrySet()) {
 				if(filter.getValue().getFilterValue() instanceof ArrayList) {
 					//Adding Column STEP 6
-					if(BusinessObjectRepoLazyDataModel.QUALITY_FILTER.equals(filter.getKey())) {
+					if(ProductRepoLazyDataModel.QUALITY_FILTER.equals(filter.getKey())) {
 						setDropdownFilterValue(filter, ((ArrayList<?>) filter.getValue().getFilterValue()).size(), Quality.class);
-					} else if(BusinessObjectRepoLazyDataModel.BUSINESS_OBJECT_STATUS_FILTER.equals(filter.getKey())) {
-						setDropdownFilterValue(filter, ((ArrayList<?>) filter.getValue().getFilterValue()).size(), BusinessObjectStatus.class);
-					} else if(BusinessObjectRepoLazyDataModel.AVAILABILITY_FILTER.equals(filter.getKey())) {
+					} else if(ProductRepoLazyDataModel.BUSINESS_OBJECT_STATUS_FILTER.equals(filter.getKey())) {
+						setDropdownFilterValue(filter, ((ArrayList<?>) filter.getValue().getFilterValue()).size(), ProductStatus.class);
+					} else if(ProductRepoLazyDataModel.AVAILABILITY_FILTER.equals(filter.getKey())) {
 						setDropdownFilterValue(filter, ((ArrayList<?>) filter.getValue().getFilterValue()).size(), Availability.class);
 					} else {
 						setDateFilterValue(filter, 
-								BusinessObjectRepoLazyDataModel.VALID_THROUGH_FILTER,
-								BusinessObjectRepoLazyDataModel.ORDER_DATE_FILTER,
-								BusinessObjectRepoLazyDataModel.DELIVERY_DATE_FILTER);
+								ProductRepoLazyDataModel.VALID_THROUGH_FILTER,
+								ProductRepoLazyDataModel.ORDER_DATE_FILTER,
+								ProductRepoLazyDataModel.DELIVERY_DATE_FILTER);
 					}
 				}
 			}
@@ -198,10 +198,10 @@ public class StateDataTableBean {
 			columnVisibility = objGson.fromJson(columnVisibilityJson, mapType);
 		}
 		
-		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent(BusinessObjectRepoLazyDataModel.TABLE_UI_PATH);
+		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent(ProductRepoLazyDataModel.TABLE_UI_PATH);
 		for(UIColumn column : dataTable.getColumns()) {
-			if(!columnVisibility.containsKey(column.getColumnKey().replace(BusinessObjectRepoLazyDataModel.TABLE_LAZY_PREFIX, ""))) {
-				columnVisibility.put(column.getColumnKey().replace(BusinessObjectRepoLazyDataModel.TABLE_LAZY_PREFIX, ""), true);
+			if(!columnVisibility.containsKey(column.getColumnKey().replace(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX, ""))) {
+				columnVisibility.put(column.getColumnKey().replace(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX, ""), true);
 			}
 		}
 		
@@ -217,19 +217,19 @@ public class StateDataTableBean {
 		Map<String, SortMeta> sortMetaMap = getSortMetaFromIUser();
 		
 		if(sortMetaMap == null || sortMetaMap.isEmpty()) {
-			SortMeta customerSort = SortMeta.builder().field(BusinessObjectRepoLazyDataModel.PRODUCT_NAME_FILTER).order(SortOrder.DESCENDING).build();
-			SortMeta testDateSort = SortMeta.builder().field(BusinessObjectRepoLazyDataModel.VALID_THROUGH_FILTER).order(SortOrder.DESCENDING).build();
+			SortMeta customerSort = SortMeta.builder().field(ProductRepoLazyDataModel.PRODUCT_NAME_FILTER).order(SortOrder.DESCENDING).build();
+			SortMeta testDateSort = SortMeta.builder().field(ProductRepoLazyDataModel.VALID_THROUGH_FILTER).order(SortOrder.DESCENDING).build();
 
-			sortMetaMap.put(BusinessObjectRepoLazyDataModel.PRODUCT_NAME_FILTER, customerSort);
-			sortMetaMap.put(BusinessObjectRepoLazyDataModel.VALID_THROUGH_FILTER, testDateSort);
+			sortMetaMap.put(ProductRepoLazyDataModel.PRODUCT_NAME_FILTER, customerSort);
+			sortMetaMap.put(ProductRepoLazyDataModel.VALID_THROUGH_FILTER, testDateSort);
 		}
 		
 		List<SortMeta> sortMetaList = new ArrayList<>();
 		
 		for(Entry<String, SortMeta> sortMeta : sortMetaMap.entrySet()) {
 			UIViewRoot viewRoot =  FacesContext.getCurrentInstance().getViewRoot();
-	        UIComponent column = viewRoot.findComponent(BusinessObjectRepoLazyDataModel.TABLE_LAZY_PREFIX + sortMeta.getValue().getField().replace("\\.", "_") + "Column");
-	        SortMeta currentSortMeta = SortMeta.of(FacesContext.getCurrentInstance(), BusinessObjectRepoLazyDataModel.TABLE_UI_PATH, (UIColumn) column);
+	        UIComponent column = viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX + sortMeta.getValue().getField().replace("\\.", "_") + "Column");
+	        SortMeta currentSortMeta = SortMeta.of(FacesContext.getCurrentInstance(), ProductRepoLazyDataModel.TABLE_UI_PATH, (UIColumn) column);
 	        currentSortMeta.setOrder(sortMeta.getValue().getOrder());
 	        currentSortMeta.setPriority(sortMeta.getValue().getPriority());
 	        sortMetaList.add(currentSortMeta);
@@ -256,7 +256,7 @@ public class StateDataTableBean {
 		int tableRows = Ivy.session().getSessionUser().getProperty("TABLE_ROWS") != null ? Integer.parseInt(Ivy.session().getSessionUser().getProperty("TABLE_ROWS")) : 10;
 		lazyModel.setTableRows(tableRows);
 		
-		PrimeFaces.current().executeScript("PF('businessObjectTable').filter()");
+		PrimeFaces.current().executeScript("PF('productTable').filter()");
 	}
 	
 	public void onRefresh() {		
@@ -274,21 +274,21 @@ public class StateDataTableBean {
 		lazyModel.getSortBy().clear();
 
 		UIViewRoot viewRoot =  FacesContext.getCurrentInstance().getViewRoot();
-		DataTable dataTable = (DataTable) viewRoot.findComponent(BusinessObjectRepoLazyDataModel.TABLE_UI_PATH);
+		DataTable dataTable = (DataTable) viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_UI_PATH);
 		//Check
 		dataTable.reset();
 		
 		List<SortMeta> sortMetaList = new ArrayList<>();
 
-		SortMeta customerSort = SortMeta.builder().field(BusinessObjectRepoLazyDataModel.PRODUCT_NAME_FILTER).order(SortOrder.DESCENDING).build();
-		SortMeta testDateSort = SortMeta.builder().field(BusinessObjectRepoLazyDataModel.VALID_THROUGH_FILTER).order(SortOrder.DESCENDING).build();
+		SortMeta customerSort = SortMeta.builder().field(ProductRepoLazyDataModel.PRODUCT_NAME_FILTER).order(SortOrder.DESCENDING).build();
+		SortMeta testDateSort = SortMeta.builder().field(ProductRepoLazyDataModel.VALID_THROUGH_FILTER).order(SortOrder.DESCENDING).build();
 		
 		sortMetaList.add(customerSort);
 		sortMetaList.add(testDateSort);
 		
 		for(SortMeta sortMeta : sortMetaList) {
-	        UIComponent column = viewRoot.findComponent(BusinessObjectRepoLazyDataModel.TABLE_LAZY_PREFIX + sortMeta.getField().replace("\\.", "_") + "Column");
-	        SortMeta currentSortMeta = SortMeta.of(FacesContext.getCurrentInstance(), BusinessObjectRepoLazyDataModel.TABLE_UI_PATH, (UIColumn) column);
+	        UIComponent column = viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX + sortMeta.getField().replace("\\.", "_") + "Column");
+	        SortMeta currentSortMeta = SortMeta.of(FacesContext.getCurrentInstance(), ProductRepoLazyDataModel.TABLE_UI_PATH, (UIColumn) column);
 	        currentSortMeta.setOrder(sortMeta.getOrder());
 	        currentSortMeta.setPriority(sortMeta.getPriority());
 	        sortMeta = currentSortMeta;
@@ -299,8 +299,8 @@ public class StateDataTableBean {
 		
 		Map<String, Boolean> columnVisibility = new HashMap<>();
 		for(UIColumn column : dataTable.getColumns()) {
-			if(!columnVisibility.containsKey(column.getColumnKey().replace(BusinessObjectRepoLazyDataModel.TABLE_LAZY_PREFIX, ""))) {
-				columnVisibility.put(column.getColumnKey().replace(BusinessObjectRepoLazyDataModel.TABLE_LAZY_PREFIX, ""), true);
+			if(!columnVisibility.containsKey(column.getColumnKey().replace(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX, ""))) {
+				columnVisibility.put(column.getColumnKey().replace(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX, ""), true);
 			}
 		}
 		lazyModel.setColumnVisibility(columnVisibility);
@@ -310,7 +310,7 @@ public class StateDataTableBean {
 		Ivy.session().getSessionUser().setProperty("CURRENT_PROFILE_NAME",  "");
 		lazyModel.saveColumnVisibilityToIUser(null);
 
-		PrimeFaces.current().executeScript("PF('businessObjectTable').filter()");
+		PrimeFaces.current().executeScript("PF('productTable').filter()");
 	}
 	
 	/**
@@ -330,13 +330,13 @@ public class StateDataTableBean {
 		List<SortMeta> sortingList = new ArrayList<>();
 		
 		for(Entry<String, SortMeta> sortMeta : sorting.entrySet()) {
-	        UIComponent column = viewRoot.findComponent(BusinessObjectRepoLazyDataModel.TABLE_LAZY_PREFIX + sortMeta.getValue().getField().replace("\\.", "_") + "Column");
-	        sortMeta.setValue(SortMeta.of(FacesContext.getCurrentInstance(), BusinessObjectRepoLazyDataModel.TABLE_UI_PATH, (UIColumn) column));
+	        UIComponent column = viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX + sortMeta.getValue().getField().replace("\\.", "_") + "Column");
+	        sortMeta.setValue(SortMeta.of(FacesContext.getCurrentInstance(), ProductRepoLazyDataModel.TABLE_UI_PATH, (UIColumn) column));
 	        sortingList.add(sortMeta.getValue());
 		}
 		
 		//Workaround for sorting not updating after profile apply if the user sorted before it
-		DataTable dataTable = (DataTable) viewRoot.findComponent(BusinessObjectRepoLazyDataModel.TABLE_UI_PATH);
+		DataTable dataTable = (DataTable) viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_UI_PATH);
 		//Check
 		dataTable.setSortBy(lazyModel.getSortBy());
 	    
@@ -348,7 +348,7 @@ public class StateDataTableBean {
 		Ivy.session().getSessionUser().setProperty("CURRENT_PROFILE_NAME",  selectedProfile.getProfileName());
 		lazyModel.saveColumnVisibilityToIUser(null);
 		
-		PrimeFaces.current().executeScript("PF('businessObjectTable').filter()");
+		PrimeFaces.current().executeScript("PF('productTable').filter()");
 	}
 	
 	/**
@@ -490,14 +490,14 @@ public class StateDataTableBean {
 	/**
 	 * @return the lazyModel
 	 */
-	public BusinessObjectLazyDataModel getLazyModel() {
+	public ProductLazyDataModel getLazyModel() {
 		return lazyModel;
 	}
 
 	/**
 	 * @param lazyModel the lazyModel to set
 	 */
-	public void setLazyModel(BusinessObjectLazyDataModel lazyModel) {
+	public void setLazyModel(ProductLazyDataModel lazyModel) {
 		this.lazyModel = lazyModel;
 	}
 
@@ -574,29 +574,29 @@ public class StateDataTableBean {
 	/**
 	 * @return the distributrOrderStatusList
 	 */
-	public List<BusinessObjectStatus> getBusinessObjectStatusList() {
-		return businessObjectStatusList;
+	public List<ProductStatus> getProductStatusList() {
+		return productStatusList;
 	}
 
 	/**
 	 * @param distributrOrderStatusList the distributrOrderStatusList to set
 	 */
-	public void setDistributrOrderStatusList(List<BusinessObjectStatus> businessObjectStatusList) {
-		this.businessObjectStatusList = businessObjectStatusList;
+	public void setDistributrOrderStatusList(List<ProductStatus> productStatusList) {
+		this.productStatusList = productStatusList;
 	}
 
 	/**
 	 * @return the selectedDistributorOrder
 	 */
-	public BusinessObject getSelectedBusinessObject() {
-		return selectedBusinessObject;
+	public Product getSelectedProduct() {
+		return selectedProduct;
 	}
 
 	/**
 	 * @param selectedDistributorOrder the selectedDistributorOrder to set
 	 */
-	public void setSelectedDistributorOrder(BusinessObject selectedBusinessObject) {
-		this.selectedBusinessObject = selectedBusinessObject;
+	public void setSelectedDistributorOrder(Product selectedProduct) {
+		this.selectedProduct = selectedProduct;
 	}
 
 	/**

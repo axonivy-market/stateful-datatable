@@ -11,9 +11,9 @@
         "outLink" : "showDatatableRepo.ivp",
         "input" : {
           "code" : [
-            "import com.axonivy.market.statefuldatatable.ui.BusinessObjectRepoLazyDataModel;",
+            "import com.axonivy.market.statefuldatatable.ui.ProductRepoLazyDataModel;",
             "",
-            "out.lazyModel = new BusinessObjectRepoLazyDataModel();"
+            "out.lazyModel = new ProductRepoLazyDataModel();"
           ]
         },
         "startName" : "Show Datatable Repo"
@@ -52,16 +52,13 @@
     }, {
       "id" : "f5",
       "type" : "DialogCall",
-      "name" : [
-        "business object",
-        "datatable"
-      ],
+      "name" : "Product datatable",
       "config" : {
         "dialogId" : "com.axonivy.market.statefuldatatable.ui.StatefulDatatable",
-        "startMethod" : "start(com.axonivy.market.statefuldatatable.ui.BusinessObjectLazyDataModel)",
+        "startMethod" : "start(com.axonivy.market.statefuldatatable.ui.ProductLazyDataModel)",
         "call" : {
           "params" : [
-            { "name" : "lazyModel", "type" : "com.axonivy.market.statefuldatatable.ui.BusinessObjectLazyDataModel" }
+            { "name" : "lazyModel", "type" : "com.axonivy.market.statefuldatatable.ui.ProductLazyDataModel" }
           ],
           "map" : {
             "param.lazyModel" : "in.lazyModel"
@@ -102,9 +99,9 @@
         "outLink" : "showDatatableDatabase.ivp",
         "input" : {
           "code" : [
-            "import com.axonivy.market.statefuldatatable.ui.BusinessObjectDatabaseLazyDataModel;",
+            "import com.axonivy.market.statefuldatatable.ui.ProductDatabaseLazyDataModel;",
             "",
-            "out.lazyModel = new BusinessObjectDatabaseLazyDataModel();"
+            "out.lazyModel = new ProductDatabaseLazyDataModel();"
           ]
         },
         "startName" : "Show Datatable Database"

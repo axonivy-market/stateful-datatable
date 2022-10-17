@@ -6,22 +6,22 @@
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",
-      "name" : "start(BusinessObjectLazyDataModel)",
+      "name" : "start(ProductLazyDataModel)",
       "config" : {
         "callSignature" : "start",
         "input" : {
           "params" : [
-            { "name" : "lazyModel", "type" : "com.axonivy.market.statefuldatatable.ui.BusinessObjectLazyDataModel" }
+            { "name" : "lazyModel", "type" : "com.axonivy.market.statefuldatatable.ui.ProductLazyDataModel" }
           ],
           "map" : {
             "out.isProfileAdmin" : "true"
           },
           "code" : [
-            "import com.axonivy.market.statefuldatatable.entity.BusinessObject;",
+            "import com.axonivy.market.statefuldatatable.entity.Product;",
             "",
             "out.stateDataTableBean.lazyModel = param.lazyModel;",
             "",
-            "out.businessObject = new BusinessObject();"
+            "out.product = new Product();"
           ]
         },
         "guid" : "182344B3616E5DFF"
@@ -58,9 +58,9 @@
     }, {
       "id" : "f6",
       "type" : "HtmlDialogMethodStart",
-      "name" : "saveBusinessObject(CellEditEvent)",
+      "name" : "saveProduct(CellEditEvent)",
       "config" : {
-        "callSignature" : "saveBusinessObject",
+        "callSignature" : "saveProduct",
         "input" : {
           "params" : [
             { "name" : "event", "type" : "org.primefaces.event.CellEditEvent" }
@@ -94,11 +94,11 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.market.statefuldatatable.entity.BusinessObject;",
+            "import com.axonivy.market.statefuldatatable.entity.Product;",
             "",
-            "BusinessObject businessObject = in.stateDataTableBean.lazyModel.getRowData(in.editedRowKey);",
+            "Product product = in.stateDataTableBean.lazyModel.getRowData(in.editedRowKey);",
             "",
-            "in.stateDataTableBean.lazyModel.updateBusinessObject(businessObject, in.newObjects, in.field);",
+            "in.stateDataTableBean.lazyModel.updateProduct(product, in.newObjects, in.field);",
             "",
             "in.newObjects.clear();"
           ]
@@ -118,7 +118,7 @@
     }, {
       "id" : "f11",
       "type" : "HtmlDialogEventStart",
-      "name" : "copyBusinessObject",
+      "name" : "copyProduct",
       "config" : {
         "guid" : "18234A19F684B7BE"
       },
@@ -135,14 +135,14 @@
         "security" : "system",
         "output" : {
           "code" : [
-            "import com.axonivy.market.statefuldatatable.service.BusinessObjectService;",
-            "import com.axonivy.market.statefuldatatable.entity.BusinessObject;",
+            "import com.axonivy.market.statefuldatatable.service.ProductService;",
+            "import com.axonivy.market.statefuldatatable.entity.Product;",
             "import javax.faces.application.FacesMessage;",
             "import javax.faces.context.FacesContext;",
             "",
-            "if(in.selectedBusinessObject.size() == 1) {",
+            "if(in.selectedProduct.size() == 1) {",
             "  for(int i = 0; i < in.numberOfCopies; i++) {",
-            "    in.stateDataTableBean.lazyModel.saveBusinessObject(BusinessObjectService.createCopy(in.selectedBusinessObject.get(0)));",
+            "    in.stateDataTableBean.lazyModel.saveProduct(ProductService.createCopy(in.selectedProduct.get(0)));",
             "  }",
             "  ",
             "  Thread.sleep(1000);",
@@ -172,10 +172,10 @@
           "code" : [
             "import com.axonivy.market.statefuldatatable.dao.DaoServiceRegistry;",
             "import com.axonivy.market.statefuldatatable.dao.DaoServiceRegistry;",
-            "import com.axonivy.market.statefuldatatable.entity.BusinessObject;",
+            "import com.axonivy.market.statefuldatatable.entity.Product;",
             "",
-            "for(BusinessObject businessObject : in.selectedBusinessObject) {",
-            "  in.stateDataTableBean.lazyModel.deleteOrder(businessObject);",
+            "for(Product product : in.selectedProduct) {",
+            "  in.stateDataTableBean.lazyModel.deleteOrder(product);",
             "}"
           ]
         }
@@ -214,10 +214,10 @@
             "import javax.faces.application.FacesMessage;",
             "import javax.faces.context.FacesContext;",
             "",
-            "if(in.selectedBusinessObject.size() != 1) {",
-            "  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, \"Only one business object must be selected!\", null));",
+            "if(in.selectedProduct.size() != 1) {",
+            "  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, \"Only one product must be selected!\", null));",
             "} else {",
-            "  PrimeFaces.current().executeScript(\"PF('copyBusinessObjectDialog').show();\");",
+            "  PrimeFaces.current().executeScript(\"PF('copyProductDialog').show();\");",
             "}"
           ]
         }
@@ -260,11 +260,11 @@
           "code" : [
             "import com.axonivy.market.statefuldatatable.dao.DaoServiceRegistry;",
             "import com.axonivy.market.statefuldatatable.dao.DaoServiceRegistry;",
-            "import com.axonivy.market.statefuldatatable.entity.BusinessObject;",
+            "import com.axonivy.market.statefuldatatable.entity.Product;",
             "",
-            "for(BusinessObject businessObject : in.selectedBusinessObject) {",
-            "  businessObject.setBusinessObjectStatus(in.multiChangeState);",
-            "  in.stateDataTableBean.lazyModel.saveBusinessObject(businessObject);",
+            "for(Product product : in.selectedProduct) {",
+            "  product.setProductStatus(in.multiChangeState);",
+            "  in.stateDataTableBean.lazyModel.saveProduct(product);",
             "}",
             "",
             "in.multiChangeState = null;"
@@ -278,7 +278,7 @@
     }, {
       "id" : "f28",
       "type" : "HtmlDialogEventStart",
-      "name" : "multiChangeBusinessObject",
+      "name" : "multiChangeProduct",
       "config" : {
         "guid" : "183469FF75BF6337"
       },
@@ -290,7 +290,7 @@
     }, {
       "id" : "f31",
       "type" : "HtmlDialogEventStart",
-      "name" : "addBusinessObject",
+      "name" : "addProduct",
       "config" : {
         "guid" : "18346C6EF7D3BCAC"
       },
@@ -318,15 +318,15 @@
             "import org.primefaces.PrimeFaces;",
             "import javax.faces.application.FacesMessage;",
             "import javax.faces.context.FacesContext;",
-            "import com.axonivy.market.statefuldatatable.entity.BusinessObject;",
+            "import com.axonivy.market.statefuldatatable.entity.Product;",
             "",
-            "if(in.businessObject.deliveryDate < in.businessObject.orderDate) {",
+            "if(in.product.deliveryDate < in.product.orderDate) {",
             "  FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ivy.cms.co(\"/Dialogs/com/axonivy/market/statefuldatatable/ui/StatefulDatatable/Error/deliveryDateBeforeOrderDate\"), null));",
             "  FacesContext.getCurrentInstance().validationFailed();",
             "} else {",
-            "  in.stateDataTableBean.lazyModel.saveBusinessObject(in.businessObject);",
+            "  in.stateDataTableBean.lazyModel.saveProduct(in.product);",
             "  ",
-            "  in.businessObject = new BusinessObject();",
+            "  in.product = new Product();",
             "  ",
             "  Thread.sleep(1000);",
             "}"

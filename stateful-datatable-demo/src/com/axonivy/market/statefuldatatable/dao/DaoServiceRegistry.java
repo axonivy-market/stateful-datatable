@@ -2,20 +2,20 @@ package com.axonivy.market.statefuldatatable.dao;
 
 public class DaoServiceRegistry {
 
-	private static BusinessObjectRepoDAO businessObjectRepoDAO = null;
-	private static BusinessObjectDatabaseDAO businessObjectDatabaseDAO = null;
+	private static ProductRepoDAO productRepoDAO = null;
+	private static ProductDatabaseDAO productDatabaseDAO = null;
 
-	public static BusinessObjectRepoDAO getBusinessObjectRepoDAO() {
-		if(businessObjectRepoDAO == null) {
-			businessObjectRepoDAO = new BusinessObjectRepoDAO();
+	public static ProductRepoDAO getProductRepoDAO() {
+		if(productRepoDAO == null) {
+			productRepoDAO = new ProductRepoDAO();
 		}
-		return businessObjectRepoDAO;
+		return productRepoDAO;
 	}
 	
-	public static BusinessObjectDatabaseDAO getBusinessObjectDatabaseDAO() {
-		if(businessObjectDatabaseDAO == null) {
-			businessObjectDatabaseDAO = new BusinessObjectDatabaseDAO();
+	public static ProductDatabaseDAO getProductDatabaseDAO() {
+		if(productDatabaseDAO == null) {
+			productDatabaseDAO = new ProductDatabaseDAO();
 		}
-		return businessObjectDatabaseDAO;
+		return productDatabaseDAO;
 	}
 }

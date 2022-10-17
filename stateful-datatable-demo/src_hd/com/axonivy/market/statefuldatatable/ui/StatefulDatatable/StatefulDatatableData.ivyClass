@@ -16,8 +16,8 @@ privateProfiles java.util.List<com.axonivy.market.statefuldatatable.entity.Profi
 privateProfiles PERSISTENT #fieldModifier
 publicProfiles java.util.List<com.axonivy.market.statefuldatatable.entity.Profile> #field
 publicProfiles PERSISTENT #fieldModifier
-selectedBusinessObject java.util.List<com.axonivy.market.statefuldatatable.entity.BusinessObject> #field
-selectedBusinessObject PERSISTENT #fieldModifier
+selectedProduct java.util.List<com.axonivy.market.statefuldatatable.entity.Product> #field
+selectedProduct PERSISTENT #fieldModifier
 selectedProfile com.axonivy.market.statefuldatatable.entity.Profile #field
 selectedProfile PERSISTENT #fieldModifier
 streamedContent org.primefaces.model.DefaultStreamedContent #field
@@ -26,7 +26,7 @@ tableRows Integer #field
 tableRows PERSISTENT #fieldModifier
 stateDataTableBean com.axonivy.market.statefuldatatable.ui.StateDataTableBean #field
 stateDataTableBean PERSISTENT #fieldModifier
-multiChangeState com.axonivy.market.statefuldatatable.enums.BusinessObjectStatus #field
+multiChangeState com.axonivy.market.statefuldatatable.enums.ProductStatus #field
 multiChangeState PERSISTENT #fieldModifier
-businessObject com.axonivy.market.statefuldatatable.entity.BusinessObject #field
-businessObject PERSISTENT #fieldModifier
+product com.axonivy.market.statefuldatatable.entity.Product #field
+product PERSISTENT #fieldModifier

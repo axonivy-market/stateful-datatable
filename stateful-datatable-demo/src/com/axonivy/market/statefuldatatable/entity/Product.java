@@ -15,12 +15,12 @@ import javax.persistence.Id;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.axonivy.market.statefuldatatable.enums.Availability;
-import com.axonivy.market.statefuldatatable.enums.BusinessObjectStatus;
+import com.axonivy.market.statefuldatatable.enums.ProductStatus;
 import com.axonivy.market.statefuldatatable.enums.Quality;
 
 
 @Entity
-public class BusinessObject extends AbstractEntity {
+public class Product extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -51,7 +51,7 @@ public class BusinessObject extends AbstractEntity {
 	
 	@Column
 	@Enumerated(EnumType.STRING)
-	private BusinessObjectStatus businessObjectStatus;
+	private ProductStatus productStatus;
 	
 	@Column
 	private String productName;
@@ -144,17 +144,17 @@ public class BusinessObject extends AbstractEntity {
 	}
 
 	/**
-	 * @return the businessObjectStatus
+	 * @return the productStatus
 	 */
-	public BusinessObjectStatus getBusinessObjectStatus() {
-		return businessObjectStatus;
+	public ProductStatus getProductStatus() {
+		return productStatus;
 	}
 
 	/**
-	 * @param businessObjectStatus the businessObjectStatus to set
+	 * @param productStatus the productStatus to set
 	 */
-	public void setBusinessObjectStatus(BusinessObjectStatus businessObjectStatus) {
-		this.businessObjectStatus = businessObjectStatus;
+	public void setProductStatus(ProductStatus productStatus) {
+		this.productStatus = productStatus;
 	}
 
 	/**

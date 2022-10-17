@@ -7,18 +7,18 @@ import org.primefaces.event.ToggleEvent;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.SortMeta;
 
-import com.axonivy.market.statefuldatatable.entity.BusinessObject;
+import com.axonivy.market.statefuldatatable.entity.Product;
 
-public interface BusinessObjectLazyDataModel {
-	public BusinessObject getRowData(String rowKey);
-	public String getRowKey(BusinessObject businessObject);
+public interface ProductLazyDataModel {
+	public Product getRowData(String rowKey);
+	public String getRowKey(Product product);
 	public Map<String, Object> getFilterText();
-	public List<BusinessObject> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy);
+	public List<Product> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy);
 	public int count(Map<String, FilterMeta> filterBy);
 	public void saveColumnVisibilityToIUser(ToggleEvent e);
-	public BusinessObject updateBusinessObject(BusinessObject businessObject, List<Object> newObjects, String field) throws InterruptedException;
-	public void deleteOrder(BusinessObject businessObject);
-	public void saveBusinessObject(BusinessObject businessObject);
+	public Product updateProduct(Product product, List<Object> newObjects, String field) throws InterruptedException;
+	public void deleteOrder(Product product);
+	public void saveProduct(Product product);
 	public Map<String, FilterMeta> getFiltersFromIUser();
 	public void setFiltersFromIUser(Map<String, FilterMeta> filtersFromIUser);
 	public List<SortMeta> getSortBy();

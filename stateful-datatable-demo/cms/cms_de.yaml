@@ -5,7 +5,7 @@ Dialogs:
         statefuldatatable:
           ui:
             StatefulDatatable:
-              addNewBusiness: Add new Business Object
+              addNewBusiness: Add new Product
               allUsers: Alle Nutzer
               columns: Spalten
               copy: Copy
