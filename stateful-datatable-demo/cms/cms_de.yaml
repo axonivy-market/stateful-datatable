@@ -1,0 +1,20 @@
+Dialogs:
+  com:
+    axonivy:
+      market:
+        statefuldatatable:
+          ui:
+            StatefulDatatable:
+              addNewBusiness: Add new Product
+              allUsers: Alle Nutzer
+              columns: Spalten
+              copy: Copy
+              deleteProfileHeader: Löschen des Profils bestätigen
+              deleteProfileMessage: Möchten Sie dieses Profil wirklich löschen?
+              multichange: Multichange
+              onlyMe: Nur ich
+              privateProfiles: Privates Profil
+              profilType: Profiltyp
+              profileName: Profilname
+              publicProfiles: Öffentliches Profil
+              saveProfile: Profil speichern

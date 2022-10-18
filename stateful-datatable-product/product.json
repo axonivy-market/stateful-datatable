@@ -1,0 +1,26 @@
+{
+  "installers": [
+    {
+      "id": "maven-import",
+      "data": {
+        "projects": [
+          {
+            "groupId": "com.axonivy.market",
+            "artifactId": "stateful-datatable-demo",
+            "version": "${version}",
+            "type": "iar"
+          }
+        ],
+        "repositories": [
+          {
+            "id": "maven.axonivy.com",
+            "url": "https://maven.axonivy.com",
+            "snapshots": {
+              "enabled": "true"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

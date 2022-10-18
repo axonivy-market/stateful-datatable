@@ -1,0 +1,78 @@
+com:
+  axonivy:
+    market:
+      statefuldatatable:
+        enums:
+          Availability:
+            IN_ORDER:
+              name: In order
+            IN_STOCK:
+              name: In stock
+            UNAVAILABLE:
+              name: Unavailable
+          ProductStatus:
+            DELIVERED:
+              name: Delivered
+            IN_PRODUCTION:
+              name: In production
+            REQUESTED:
+              name: Requested
+            SHIPPED:
+              name: Shipped
+          Quality:
+            HIGH:
+              name: High
+            LOW:
+              name: Low
+            MEDIUM:
+              name: Medium
+            ULTRA:
+              name: Ultra
+Dialogs:
+  com:
+    axonivy:
+      market:
+        statefuldatatable:
+          ui:
+            StatefulDatatable:
+              Error:
+                deliveryDateBeforeOrderDate: Delivery date cannot be before Order date
+              actions: Actions
+              addBusiness: Add Product
+              addNewBusiness: Add new Product
+              allUsers: All Users
+              products: List of products
+              columns: Columns
+              copy: Copy
+              copyProduct: Copy Product
+              delete: Delete
+              deleteProfileHeader: Profile Deletion
+              deleteProfileMessage: Are you sure you want to delete this profile?
+              deleteSelected: Delete selected
+              deletionHeader: Deleting products
+              deletionMessage: Do you want to delete all the selected products?
+              deliveryDate: Delivery Date
+              id: ID
+              multichange: Multichange
+              multipleStatusChange: Multiple status change
+              newState: New state
+              'no': 'No'
+              onSale: On sale
+              onlyMe: Only me
+              orderDate: Order Date
+              privateProfiles: Private Profiles
+              productName: Product Name
+              profilType: Profile Type
+              profileName: Profilname
+              publicProfiles: Public Profiles
+              quality: Quality
+              quantity: Quantity
+              required: 'Required:'
+              saveProfile: Save Profile
+              state: State
+              title: Stateful Datatable
+              validThrough: Valid Through
+              'yes': 'Yes'
+Labels:
+  'no': 'No'
+  'yes': 'Yes'
