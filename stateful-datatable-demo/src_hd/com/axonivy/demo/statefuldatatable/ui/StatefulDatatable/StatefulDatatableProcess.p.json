@@ -1,8 +1,10 @@
 {
-  "format" : "9.4.20",
+  "format" : "10.0.0",
   "id" : "183AC94C87637F79",
-  "data" : "com.axonivy.demo.statefuldatatable.ui.StatefulDatatable.StatefulDatatableData",
   "kind" : "HTML_DIALOG",
+  "config" : {
+    "data" : "com.axonivy.demo.statefuldatatable.ui.StatefulDatatable.StatefulDatatableData"
+  },
   "elements" : [ {
       "id" : "f0",
       "type" : "HtmlDialogStart",
