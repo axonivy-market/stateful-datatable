@@ -1,7 +1,7 @@
 Dialogs:
   com:
     axonivy:
-      market:
+      demo:
         statefuldatatable:
           ui:
             StatefulDatatable:

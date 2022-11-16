@@ -1,7 +1,7 @@
 {
   "format" : "9.4.20",
   "id" : "183AC82DD4753247",
-  "data" : "com.axonivy.market.statefuldatatable.ShowStatefulDatatableData",
+  "data" : "com.axonivy.demo.statefuldatatable.ShowStatefulDatatableData",
   "elements" : [ {
       "id" : "f0",
       "type" : "RequestStart",
@@ -11,7 +11,7 @@
         "outLink" : "showDatatableRepo.ivp",
         "input" : {
           "code" : [
-            "import com.axonivy.market.statefuldatatable.ui.ProductRepoLazyDataModel;",
+            "import com.axonivy.demo.statefuldatatable.ui.ProductRepoLazyDataModel;",
             "",
             "out.lazyModel = new ProductRepoLazyDataModel();"
           ]
@@ -39,7 +39,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.market.statefuldatatable.service.TestDataService;",
+            "import com.axonivy.demo.statefuldatatable.service.TestDataService;",
             "",
             "TestDataService.createAndSaveBusinessTestData();"
           ]
@@ -54,11 +54,11 @@
       "type" : "DialogCall",
       "name" : "Product datatable",
       "config" : {
-        "dialogId" : "com.axonivy.market.statefuldatatable.ui.StatefulDatatable",
-        "startMethod" : "start(com.axonivy.market.statefuldatatable.ui.ProductLazyDataModel)",
+        "dialogId" : "com.axonivy.demo.statefuldatatable.ui.StatefulDatatable",
+        "startMethod" : "start(com.axonivy.demo.statefuldatatable.ui.ProductLazyDataModel)",
         "call" : {
           "params" : [
-            { "name" : "lazyModel", "type" : "com.axonivy.market.statefuldatatable.ui.ProductLazyDataModel" }
+            { "name" : "lazyModel", "type" : "com.axonivy.demo.statefuldatatable.ui.ProductLazyDataModel" }
           ],
           "map" : {
             "param.lazyModel" : "in.lazyModel"
@@ -99,7 +99,7 @@
         "outLink" : "showDatatableDatabase.ivp",
         "input" : {
           "code" : [
-            "import com.axonivy.market.statefuldatatable.ui.ProductDatabaseLazyDataModel;",
+            "import com.axonivy.demo.statefuldatatable.ui.ProductDatabaseLazyDataModel;",
             "",
             "out.lazyModel = new ProductDatabaseLazyDataModel();"
           ]
@@ -121,7 +121,7 @@
       "config" : {
         "output" : {
           "code" : [
-            "import com.axonivy.market.statefuldatatable.service.TestDataService;",
+            "import com.axonivy.demo.statefuldatatable.service.TestDataService;",
             "",
             "TestDataService.createAndSaveDatabaseTestData();"
           ]

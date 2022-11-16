@@ -1,6 +1,6 @@
 com:
   axonivy:
-    market:
+    demo:
       statefuldatatable:
         enums:
           Availability:
@@ -31,7 +31,7 @@ com:
 Dialogs:
   com:
     axonivy:
-      market:
+      demo:
         statefuldatatable:
           ui:
             StatefulDatatable:
