@@ -1,0 +1,32 @@
+StatefulDatatableData #class
+com.axonivy.demo.statefuldatatable.ui.StatefulDatatable #namespace
+copyValid Boolean #field
+copyValid PERSISTENT #fieldModifier
+editedRowKey String #field
+editedRowKey PERSISTENT #fieldModifier
+field String #field
+field PERSISTENT #fieldModifier
+isProfileAdmin Boolean #field
+isProfileAdmin PERSISTENT #fieldModifier
+newObjects List<java.lang.Object> #field
+newObjects PERSISTENT #fieldModifier
+numberOfCopies Integer #field
+numberOfCopies PERSISTENT #fieldModifier
+privateProfiles java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile> #field
+privateProfiles PERSISTENT #fieldModifier
+publicProfiles java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile> #field
+publicProfiles PERSISTENT #fieldModifier
+selectedProduct java.util.List<com.axonivy.demo.statefuldatatable.entity.Product> #field
+selectedProduct PERSISTENT #fieldModifier
+selectedProfile com.axonivy.demo.statefuldatatable.entity.Profile #field
+selectedProfile PERSISTENT #fieldModifier
+streamedContent org.primefaces.model.DefaultStreamedContent #field
+streamedContent PERSISTENT #fieldModifier
+tableRows Integer #field
+tableRows PERSISTENT #fieldModifier
+stateDataTableBean com.axonivy.demo.statefuldatatable.ui.StateDataTableBean #field
+stateDataTableBean PERSISTENT #fieldModifier
+multiChangeState com.axonivy.demo.statefuldatatable.enums.ProductStatus #field
+multiChangeState PERSISTENT #fieldModifier
+product com.axonivy.demo.statefuldatatable.entity.Product #field
+product PERSISTENT #fieldModifier

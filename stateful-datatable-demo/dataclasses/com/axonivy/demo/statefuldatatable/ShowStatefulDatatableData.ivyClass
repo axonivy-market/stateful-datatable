@@ -1,0 +1,3 @@
+ShowStatefulDatatableData #class
+com.axonivy.demo.statefuldatatable #namespace
+lazyModel com.axonivy.demo.statefuldatatable.ui.ProductLazyDataModel #field
