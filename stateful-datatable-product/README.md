@@ -6,7 +6,7 @@ A utility Dialog to implement a stateful-datatable with Ivy and Primefaces.
 
 In this demo, a lazy datatable is listing all the products available in the data base or in the Ivy business repo.
 
-![List of Products](DemoCapture.PNG "List of Products")
+![List of Products](DemoCapture.png "List of Products")
 
 ## Setup
 
