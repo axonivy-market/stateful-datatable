@@ -1,0 +1,541 @@
+@CHARSET "ISO-8859-1";
+
+body .container {
+	margin: 0;
+	width: 100%;
+}
+
+.buttonMargin {
+	margin-left: 5px !important;
+}
+
+.checkboxColumnShown {
+	width: 16px;
+	text-align: center;
+	visibility: visible;
+}
+
+.checkboxColumnHidden {
+	width: 0px !important;
+	visibility: hidden!important;
+	padding: 0px !important;
+}
+
+.ui-selectoneradio label {
+	padding-left: 3px;
+	float: none !important;
+}
+
+.linkText {
+	font-size: 14px !important; 
+	text-decoration: underline !important;	
+}
+
+body .ui-datatable tbody tr.ui-datatable-even.ui-state-highlight, body .ui-state-active, body .ui-state-highlight .linkText {
+	color: white;
+}
+
+.noFloat {
+	float: none !important;
+}
+
+body .ui-datatable tbody tr.ui-datatable-even.ui-state-highlight, body .ui-state-active, body .ui-state-highlight {
+	background-color: #006f94;
+	color: #ffffff;	
+}
+
+.center {
+	text-align: center;
+}
+
+.head {
+	font-weight:bold !important;
+}
+
+.headerList {
+	font-weight:bold !important;
+	font-size:18px;
+}
+
+.tableHeader {
+	font-size: large;
+	font-weight: bolder !important;
+	display: inline-block;
+	word-wrap: break-word;
+}
+
+.noPad {
+	padding: 0px !important;
+}
+
+.width200px {
+	width: 200px !important;
+}
+
+.tableHeaderButtonLeft {
+	margin-right: 2px !important;
+	margin-left: 2px !important;
+	top: 20%;
+	float: left;
+}
+
+.tableHeaderButtonRight {
+	margin-right: 2px !important;
+	margin-left: 2px !important;
+	top: 20%;
+	float: right;
+}
+
+.whiteIcon .ui-button-icon-right {
+	color: white !important;	
+}
+
+.whiteIcon .ui-chkbox-icon {
+	color: white !important;
+}
+
+.copySpinner {
+	margin-right: 2px;
+	margin-left: 2px;
+	width: 75px;
+	top: -7px; 
+}
+
+.headerCheckbox {
+	margin-right: 2px;
+	margin-left: 2px;
+	position: relative;
+	top: 35%;
+	float: left;
+}
+
+.ui-cell-editor-input {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.cellInputPart {
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.ui-state-highlight .ui-inputfield {
+	color: #ffffff !important;
+}
+
+.gray, .gray > .ui-inputfield {
+	background-color: lightgray !important;
+	color: black !important;
+}
+
+.orange, .orange > .ui-inputfield {
+	background-color: orange !important;
+	color: black !important;
+}
+
+.yellow, .yellow > .ui-inputfield {
+	background-color: yellow !important;
+	color: black !important;
+}
+
+.green, .green > .ui-inputfield {
+	background-color: SpringGreen !important;
+	color: black !important;
+}
+
+td .gray,
+td .orange,
+td .yellow,
+td .green {
+	padding: 0.714em 0.857em;
+	width: 100%;
+	display: inline-block;
+}
+
+.container {
+	width: 100%;
+}
+
+.center{
+	text-align:center;
+}
+
+.tinyColumnCaseTable {
+	width: 40px !important;
+}
+
+.smallColumnCaseTable {
+	width: 75px !important;
+}
+
+.mediumColumnCaseTable {
+	width: 90px !important;
+}
+
+.orderNumberColumnCaseTable {
+	width: 95px !important;
+}
+
+.zoneNumberColumnCaseTable {
+	width: 95px !important;
+}
+
+.largeColumnCaseTable {
+	width: 150px !important;
+}
+
+.stateColumnCaseTable {
+	width: 112px !important;
+}
+
+.eplanMAColumnCaseTable {
+	width: 95px !important; 
+}
+
+.eplanStatusColumnCaseTable {
+	width: 110px !important; 
+}
+
+.eplanDateColumnCaseTable {
+	width: 115px !important;
+}
+
+.testDateColumnCaseTable {
+	width: 95px !important;
+}
+
+.deliveryDateColumnCaseTable {
+	width: 105px !important;
+}
+
+.deliveryDateColumnCaseTable {
+	width: 105px !important;
+}
+
+.orderMaterialColumnCaseTable {
+	width: 120px !important;
+}
+
+.productionStateDateColumnCaseTable {
+	width: 160px !important;
+	padding: 0px !important;
+}
+
+.caseIDColumnCaseTable {
+	width: 40px !important;
+}
+
+.xlargeColumnCaseTable {
+	width: 200px !important;
+}
+
+.xxsColumnCaseTable {
+	width: 45px !important;
+}
+
+.xsColumnCaseTable {
+	width: 50px !important;
+}
+.zoneColumnCaseTable {
+	width: 60px !important;
+}
+
+.caseDeliveryDateColumnCaseTable {
+	width: 95px !important;
+}
+.caseStatusDateColumnCaseTable {
+	width: 200px !important;
+	padding: 0px !important;
+}
+.caseTestDateColumnCaseTable {
+	width: 85px !important;
+}
+
+.shilderColumnCaseTable {
+	width: 80px !important;
+}
+
+.numberColumnCaseTable {
+	width: 100px !important;
+}
+
+.mlNumberColumnCaseTable {
+	width: 120px !important;
+}
+
+.width100 {
+	width: 100%;
+}
+.width {
+	width: 100%;
+}
+/*.mainPanelGrid .ui-outputlabel {
+      float:right;
+} */
+.detailPanelGrid  {
+	width: 80% !important;
+}
+.ui-datatable .ui-datatable-tablewrapper table thead tr th {
+	background:white !important;
+}
+.topAligned td{
+    vertical-align: top;
+}
+.ui-datatable-scrollable-header-box {
+	margin-right: 0px !important;	
+}
+/********************************** PROCESS CHAIN **********************************/
+.process-chain {
+      float: right;
+      //top: -40px !important;
+      //right: 10px;
+      clear: both; 
+      color: #6a625a !important;
+}
+
+@media (max-width: 1600px) {  
+      .process-chain {
+            right: -10px;
+      }
+      
+      .widthTaskName {
+          width: 43% !important;
+      }
+}
+
+@media (max-width: 1440px) {
+      .process-chain {
+            right: -20px;
+      }
+      
+      .widthTaskName {
+          width: 43% !important;
+      }
+}
+
+.process-chain .process-step {
+     width: 100px;
+      height: 50px;
+      display: inline-block;
+      margin: 1px;
+      text-align: center;
+      font-size: 14px;
+    color: #6a625a !important;
+}
+
+.process-chain .process-step[type="current"] {
+      background-image: none !important;
+      border-bottom:8px solid #0093d0 !important;
+      font-size: 14px;
+      font-weight: bold;
+      color: #6a625a !important;
+}
+
+.process-chain .process-step[type="current"] .step-title {
+      background-image: none !important;
+     position: relative;
+     margin-top: 5px !important; 
+      float: left;
+      width: 100%;
+      text-align: center;
+}
+
+.process-chain .process-step[type="current"]:first-child {
+      background-image: none !important;
+     border-bottom:8px solid #0093d0 !important;
+}
+
+.process-chain .process-step[type="current"]:last-child {
+      background-image: none !important;
+      border-bottom:8px solid #0093d0 !important;
+}
+
+.process-chain .process-step[type="visited"] {
+      background-image: none !important;
+      border-bottom:8px solid #0093d0 !important;
+}
+
+.process-chain .process-step[type="visited"] .step-title {
+      background-image: none !important;
+     word-wrap: break-word;
+     background-image: none !important;
+      position: relative;
+      top: 6px !important;
+      float: left;
+      width: 100%;
+      text-align: center;
+}
+
+.process-chain .process-step[type="visited"]:first-child {
+      background-image: none !important;
+      border-bottom:8px solid #0093d0 !important;
+}
+
+.process-chain .process-step[type="visited"]:last-child {
+      background-image: none !important;
+      border-bottom:8px solid #0093d0 !important;
+}
+
+.process-chain .process-step[type="waiting"] {
+      background-image: none !important;
+      border-bottom:8px solid #f5f5f5 !important;
+}
+
+.process-chain .process-step[type="waiting"] .step-title {
+      background-image: none !important;
+      position: relative;
+      top: 6px !important;
+      float: left;
+      width: 100%;
+      text-align: center;
+      
+}
+
+.process-chain .process-step[type="waiting"]:last-child {
+      background-image: none !important;
+      border-bottom:8px solid #f5f5f5 !important;
+}
+
+.step-title {
+      white-space: normal !important;
+} 
+
+
+/********************************** END PROCESS CHAIN **********************************/
+
+/* .ui-datatable table {
+    border-collapse: collapse;
+    table-layout: unset !important;
+} */
+
+/*style for Overview Table Header*/
+.caseTable table thead tr th {
+    height: 30px;
+    color: rgba(0, 0, 0, 1);
+    background-color: rgba(236, 236, 236, 1);
+    font-size: 1.2rem;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    text-align: left;
+    font-weight: normal;
+}
+/* 
+.caseTable td .ui-outputlabel, .caseTable .ui-panelgrid-cell .ui-outputlabel {
+     word-break: break-all !important;
+} */
+
+.ui-datatable-resizable thead th, .ui-datatable-resizable tbody td, .ui-datatable-resizable tfoot td {
+    white-space: pre-line !important;
+}
+
+.ui-paginator .ui-state-active, .ui-paginator .ui-state-hover, .ui-paginator .ui-paginator-pages .ui-state-active, .ui-paginator .ui-paginator-pages .ui-state-hover {
+	font-size: 14px;
+}
+
+.ui-paginator .ui-paginator-first, .ui-paginator .ui-paginator-prev, .ui-paginator .ui-paginator-pages .ui-paginator-page, .ui-paginator .ui-paginator-next, .ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-rpp-options {
+	padding: 0px 8px !important;
+	font-size: 14px;
+	}
+	
+}
+
+body .ui-radiobutton .ui-radiobutton-box .ui-radiobutton-icon {
+    -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
+
+body .ui-chkbox .ui-chkbox-box,
+.ui-chkbox .ui-chkbox-box .ui-icon-check {
+    -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
+
+
+.custom-radio-grid .ui-panelgrid-cell {
+	padding: 7px !important;
+}
+
+.custom-radio-grid .ui-panelgrid-cell .ui-outputlabel {
+	margin: 1px 0px 0px 0px;
+	padding: 0px 0px 0px 3px;
+}
+
+.no-files-dialog-button {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+}
+
+.ui-datatable-header {
+	height: 60px
+}
+
+.ui-column-filter, .ui-selectonemenu-label, .ui-inputfield {
+	color: black !important;
+}
+
+.profileContainer {
+  content: "\f0d7";
+  display: inline-block;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-left: 0px;
+  display: inline-block;
+  width: 100%;
+  margin-right: 0px;
+  text-align: left !important;
+}
+
+.profileName {
+  width: 100%;
+  line-height: 30px;
+  display: inline-block;
+  padding: 0 10px 0 5px;
+}
+
+.profileContainer .profileOverlay .ui-overlaypanel-content {
+  padding: 15px 0 !important;
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.profileContainer .profileOverlay .profileContainer {
+  display: flex;
+  width: 16rem;
+  flex-flow: row;
+  align-items: left;
+}
+
+.profileOverlay .profileTypeLabel {
+  text-align: left;
+  padding: 10px 0 10px 6px;
+}
+
+.profileOverlay .profileContainer .profile {
+  flex: 1 0 80%;
+  position: relative;
+  text-align: left;
+  padding: 10px 0 10px 6px;
+  max-width: 14rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.profileOverlay .profileContainer .deleteProfile {
+  text-align: right !important;
+  display: inline;
+  flex: 1 0 auto;
+  margin-right: 10px;
+  width: 1rem;
+}
