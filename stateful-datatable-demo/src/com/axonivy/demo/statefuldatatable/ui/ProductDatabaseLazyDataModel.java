@@ -42,10 +42,10 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.scripting.objects.DateTime;
 import ch.ivyteam.ivy.security.IUser;
 /**
- * This is the Lazy Data Model used in the primefaces datatable. The model has additional fields to store sorting and visibility data. 
+ * This is the Lazy Data Model used in the primefaces datatable. The model has additional fields to store sorting and visibility data.
  * There are also filters that are set for the first time when the datatable will load. After each load the sorting, filtering and visibility data are saved
- * into IUser data. 
- * 
+ * into IUser data.
+ *
  * @author david.merunko
  *
  */
@@ -69,7 +69,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	//Boolean filter
 	public static final String ON_SALE_FILTER = "onSale";
 
-	
+
 	//Map that holds the initial filters loaded from IUser
 	private Map<String, FilterMeta> filtersFromIUser;
 	//List that holds the sorting data
@@ -77,25 +77,26 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	//Map that holds the visibility of columns
 	private Map<String, Boolean> columnVisibility = new HashMap<>();
 	private int tableRows;
-	
+
 	private boolean useSavedFilters = true;
 	private boolean useSavedSorting = true;
 	private boolean showNotApplicable = true;
 	private boolean tableDefault = true;
-	
+
 	@Override
-    public Product getRowData(String rowKey) {
+  	public Product getRowData(String rowKey) {
 		return DaoServiceRegistry.getProductDatabaseDAO().getById(rowKey);
     }
 
     @Override
-    public String getRowKey(Product product) {
+  	public String getRowKey(Product product) {
         return String.valueOf(product.getId());
     }
-    
+
     /**
 	 * Get filter Text from IUser filter data to show up in the UI
 	 */
+	@Override
 	public Map<String, Object> getFilterText() {
 		Map<String, Object> filterFromIUserMap = new HashMap<>();
 		if (filtersFromIUser != null) {
@@ -104,72 +105,71 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 				filterFromIUserMap.put(filter.getKey(), filter.getValue().getFilterValue());
 			}
 		}
-		
+
 		return filterFromIUserMap;
 	}
-	
+
 	@Override
 	public int count(Map<String, FilterMeta> filterBy) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	/**
 	 * Main load method for the lazy data model. At the begining we set the filters from IUser the first time tabl is loaded. At the end, we save
 	 * filter and sorting.
 	 */
 	@Override
-	public List<Product> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
-		if (filterBy.isEmpty() && sortBy.size() == 2 && !columnVisibility.containsValue(false)
-				&& sortBy.get(PRODUCT_NAME_FILTER) != null
-				&& sortBy.get(PRODUCT_NAME_FILTER).getOrder() == SortOrder.DESCENDING
-				&& sortBy.get(VALID_THROUGH_FILTER) != null
-				&& sortBy.get(VALID_THROUGH_FILTER).getOrder() == SortOrder.DESCENDING) {
+	public List<Product> load(int first, int pageSize, Map<String, SortMeta> sort, Map<String, FilterMeta> filterBy) {
+		if (filterBy.isEmpty() && sort.size() == 2 && !columnVisibility.containsValue(false)
+				&& sort.get(PRODUCT_NAME_FILTER) != null
+				&& sort.get(PRODUCT_NAME_FILTER).getOrder() == SortOrder.DESCENDING
+				&& sort.get(VALID_THROUGH_FILTER) != null
+				&& sort.get(VALID_THROUGH_FILTER).getOrder() == SortOrder.DESCENDING) {
 			tableDefault = true;
 		} else {
 			tableDefault = false;
 		}
-		
+
 		//First time the table is loaded, we use the filters from IUser
 		if(useSavedFilters && filtersFromIUser != null) {
 			filterBy = filtersFromIUser;
 			useSavedFilters = false;
 		}
-		
+
 		if(this.sortBy != null && useSavedSorting) {
-			sortBy.clear();
+			sort.clear();
 			for(SortMeta sortMeta : this.sortBy) {
-				sortBy.put(sortMeta.getField(), sortMeta);
+				sort.put(sortMeta.getField(), sortMeta);
 			}
 			useSavedSorting = false;
-		}		
-			
+		}
+
 		//Setup for database query
 		CriteriaBuilder cb = DaoServiceRegistry.getProductDatabaseDAO().getCriteriaBuilder();
 		CriteriaQuery<Product> cr = cb.createQuery(Product.class);
 		Root<Product> root = cr.from(Product.class);
 		List<Predicate> predicates = new ArrayList<>();
-		
+
 		//Adding Column STEP 4
 		//Filtering based on the table columns
 		addStringContainsQueryFilter(predicates, cb, root, PRODUCT_NAME_FILTER, filterBy);
 
 		addNumberRangeQueryFilter(predicates, cb, root,  QUANTITY_FILTER, filterBy);
-		
+
 		addDateRangeQueryFilter(predicates, cb, root, VALID_THROUGH_FILTER, filterBy, false);
 		addDateRangeQueryFilter(predicates, cb, root, ORDER_DATE_FILTER, filterBy, false);
 		addDateRangeQueryFilter(predicates, cb, root, DELIVERY_DATE_FILTER, filterBy, false);
-		
+
 		addSelectOneMenuQueryFilter(predicates, cb, root,  AVAILABILITY_FILTER, filterBy);
 		addSelectOneMenuQueryFilter(predicates, cb, root, QUALITY_FILTER, filterBy);
 		addSelectOneMenuQueryFilter(predicates, cb, root, BUSINESS_OBJECT_STATUS_FILTER, filterBy);
-		
+
 		addBooleanQueryFilter(predicates, cb, root, ON_SALE_FILTER, filterBy);
 
 		List<Order> orderList = new ArrayList<>();
 		//Ordering with Sort Meta
-		if(sortBy != null) {
-			for(Entry<String, SortMeta> sortMeta : sortBy.entrySet()) {
+		if(sort != null) {
+			for(Entry<String, SortMeta> sortMeta : sort.entrySet()) {
 				if(sortMeta.getValue().getOrder() == SortOrder.DESCENDING) {
 					orderList.add(cb.desc(root.get(sortMeta.getValue().getField())));
 				} else {
@@ -177,24 +177,25 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 				}
 			}
 		}
-		
+
 		cr.select(root).where(predicates.toArray(new Predicate[0])).orderBy(orderList);
 		List<Product> result = DaoServiceRegistry.getProductDatabaseDAO().getByCriteriaQuery(cr, first, pageSize);
 		setRowCount(DaoServiceRegistry.getProductDatabaseDAO().getByCriteriaQuery(cr).size());
 		//setRowCount(10);
 		//Saving the filters and sorting
 		saveFilterStateAndvalueIntoIUser(filterBy);
-		saveSortMetaIntoIUser(sortBy);
+		saveSortMetaIntoIUser(sort);
 		saveTableRowsIntoIUser();
-		
+
 		filtersFromIUser = filterBy;
-		for(Entry<String, SortMeta> sortMeta : sortBy.entrySet()) {
+		for(Entry<String, SortMeta> sortMeta : sort.entrySet()) {
 			this.sortBy.add(sortMeta.getValue());
 		}
-		
+
 		return result;
 	}
-	
+
+	@Override
 	public Product updateProduct(Product product, List<Object> newObjects,
 			String field) throws InterruptedException {
 		//Adding Column STEP 5
@@ -235,18 +236,21 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 
 		return product;
 	}
-	
+
+	@Override
 	public void deleteOrder(Product product) {
 		DaoServiceRegistry.getProductDatabaseDAO().delete(product);
 	}
-	
+
+	@Override
 	public void saveProduct(Product product) {
 		DaoServiceRegistry.getProductDatabaseDAO().save(product);
 	}
-	
+
 	private void addSelectOneMenuQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<Product> root, String filterName, Map<String, FilterMeta> filters) {
 		if(filters.get(filterName) != null) {
 			if(filters.get(filterName).getFilterValue() instanceof ArrayList) {
+				@SuppressWarnings("all")
 				ArrayList<String> statusArray = (ArrayList<String>) filters.get(filterName).getFilterValue();
 				if(!statusArray.isEmpty()) {
 					predicates.add(cb.in(root.get(filterName)).value(statusArray));
@@ -259,10 +263,10 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 					predicates.add(root.get(filterName).in(statusArray));
 				}
 			}
-			
+
 		}
 	}
-	
+
 	private void addBooleanQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<Product> root, String filterName, Map<String, FilterMeta> filters) {
 		if(filters.get(filterName) != null) {
 			if(filters.get(filterName).getFilterValue() instanceof Object[]) {
@@ -273,7 +277,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 			}
 		}
 	}
-	
+
 	private void addNumberRangeQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<Product> root, String filterName, Map<String, FilterMeta> filters) {
 		if(filters.get(filterName) != null) {
 			String[] amounts = filters.get(filterName).getFilterValue().toString().split("-");
@@ -291,75 +295,77 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 			}
 		}
 	}
-	
+
 	private void addStringContainsQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<Product> root, String filterName, Map<String, FilterMeta> filters) {
 		if(filters.get(filterName) != null) {
 			predicates.add(cb.like(root.get(filterName), "%" + filters.get(filterName).getFilterValue().toString() + "%"));
 		}
 	}
-	
-	private void addDateRangeQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<Product> root, String filterName, Map<String, FilterMeta> filters, boolean checkStatus) {
+
+	private void addDateRangeQueryFilter(List<Predicate> predicates, CriteriaBuilder cb, Root<Product> root, String filterName, Map<String, FilterMeta> filters, boolean statusCheck) {
 		if(filters.get(filterName) != null) {
-			List<LocalDate> dateRange = (ArrayList<LocalDate>) filters.get(filterName).getFilterValue();
+			@SuppressWarnings({"all"})
+      List<LocalDate> dateRange = (ArrayList<LocalDate>) filters.get(filterName).getFilterValue();
 			if(dateRange.size() > 1) {
 				predicates.add(cb.and(cb.greaterThanOrEqualTo(root.get(filterName), DateService.setTimeZero(dateRange.get(0))), cb.lessThanOrEqualTo(root.get(filterName), DateService.setTimeMidnight(dateRange.get(1)))));
 			}
 		}
 	}
-	
+
 	/**
 	 * Save column visibility Values into IUser as JSON
 	 */
+	@Override
 	public void saveColumnVisibilityToIUser(ToggleEvent e) {
 		if(e != null) {
 			DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent(TABLE_UI_PATH);
 			columnVisibility.put(dataTable.getColumns().get((Integer) e.getData()).getColumnKey().replace(TABLE_LAZY_PREFIX, ""), e.getVisibility() == Visibility.VISIBLE);
 		}
-		
+
 		Gson objGson = new GsonBuilder().setPrettyPrinting().create();
 		String visibilityToJson = objGson.toJson(columnVisibility);
-		
+
 		IUser currentUser = Ivy.session().getSessionUser();
 		currentUser.setProperty("COLUMN_VISIBILITY", visibilityToJson);
 	}
-	
+
 	public abstract class FilterMixin {
 		@JsonIgnore
 		ValueExpression filterBy;
-		
+
 		@JsonIgnore
 		FilterConstraint constraint;
-		
+
 		@JsonIgnore
 		abstract boolean isActive();
-		
+
 		@JsonIgnore
 		abstract boolean isGlobalFilter();
 	}
-	
+
 	/**
-	 * Save filter values into IUser as JSON 
+	 * Save filter values into IUser as JSON
 	 */
 	private void saveFilterStateAndvalueIntoIUser(Map<String, FilterMeta> filters) {
 		Map<String, Map<String, FilterMeta>> searchFilterMap = new HashMap<>();
 		searchFilterMap.put("searchFilters", filters);
-		
+
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.registerModule(new JavaTimeModule());		
+		mapper.registerModule(new JavaTimeModule());
 		mapper.addMixIn(FilterMeta.class, FilterMixin.class);
 		JsonNode jsonNode = mapper.valueToTree(filters);
 		String mapToJson = "";
-		
+
 		try {
 			mapToJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
 		} catch (JsonProcessingException e) {
 			Ivy.log().error("Couldn't parse filter map to json");
 		}
-		
+
 		IUser currentUser = Ivy.session().getSessionUser();
 		currentUser.setProperty("FILTER_SEARCH", mapToJson);
 	}
-	
+
 	/**
 	 * Save rows number into IUser as property
 	 */
@@ -367,15 +373,15 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 		IUser currentUser = Ivy.session().getSessionUser();
 		currentUser.setProperty("TABLE_ROWS", "" + tableRows);
 	}
-	
-	public abstract class SortMixin {
+
+	public static abstract class SortMixin {
 		@JsonIgnore
 		ValueExpression sortBy;
-		
+
 		@JsonIgnore
 		abstract boolean isActive();
 	}
-	
+
 	/**
 	 * Save sorting values into IUser as JSON
 	 */
@@ -388,7 +394,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 		mapper.addMixIn(SortMeta.class, SortMixin.class);
 		JsonNode jsonNode = mapper.valueToTree(multiSortMeta);
 		String mapToJson = "";
-		
+
 		try {
 			mapToJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
 		} catch (JsonProcessingException e) {
@@ -402,6 +408,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @return the defaultFilter
 	 */
+	@Override
 	public Map<String, FilterMeta> getFiltersFromIUser() {
 		return filtersFromIUser;
 	}
@@ -409,6 +416,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @param filtersFromIUser the defaultFilter to set
 	 */
+	@Override
 	public void setFiltersFromIUser(Map<String, FilterMeta> filtersFromIUser) {
 		this.filtersFromIUser = filtersFromIUser;
 	}
@@ -416,6 +424,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @return the sortBy
 	 */
+	@Override
 	public List<SortMeta> getSortBy() {
 		return sortBy;
 	}
@@ -423,6 +432,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @param sortBy the sortBy to set
 	 */
+	@Override
 	public void setSortBy(List<SortMeta> sortBy) {
 		this.sortBy = sortBy;
 	}
@@ -430,6 +440,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @return the columnVisibility
 	 */
+	@Override
 	public Map<String, Boolean> getColumnVisibility() {
 		return columnVisibility;
 	}
@@ -437,6 +448,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @param columnVisibility the columnVisibility to set
 	 */
+	@Override
 	public void setColumnVisibility(Map<String, Boolean> columnVisibility) {
 		this.columnVisibility = columnVisibility;
 	}
@@ -444,6 +456,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @return the useSavedFilters
 	 */
+	@Override
 	public boolean isUseSavedFilters() {
 		return useSavedFilters;
 	}
@@ -451,6 +464,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @param useSavedFilters the useSavedFilters to set
 	 */
+	@Override
 	public void setUseSavedFilters(boolean useSavedFilters) {
 		this.useSavedFilters = useSavedFilters;
 	}
@@ -458,6 +472,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @return the useSavedSorting
 	 */
+	@Override
 	public boolean isUseSavedSorting() {
 		return useSavedSorting;
 	}
@@ -465,6 +480,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @param useSavedSorting the useSavedSorting to set
 	 */
+	@Override
 	public void setUseSavedSorting(boolean useSavedSorting) {
 		this.useSavedSorting = useSavedSorting;
 	}
@@ -472,6 +488,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @return the showNotApplicable
 	 */
+	@Override
 	public boolean isShowNotApplicable() {
 		return showNotApplicable;
 	}
@@ -479,6 +496,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @param showNotApplicable the showNotApplicable to set
 	 */
+	@Override
 	public void setShowNotApplicable(boolean showNotApplicable) {
 		this.showNotApplicable = showNotApplicable;
 	}
@@ -486,6 +504,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @return the tableDefault
 	 */
+	@Override
 	public boolean isTableDefault() {
 		return tableDefault;
 	}
@@ -493,6 +512,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @param tableDefault the tableDefault to set
 	 */
+	@Override
 	public void setTableDefault(boolean tableDefault) {
 		this.tableDefault = tableDefault;
 	}
@@ -500,6 +520,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @return the tableRows
 	 */
+	@Override
 	public int getTableRows() {
 		return tableRows;
 	}
@@ -507,6 +528,7 @@ public class ProductDatabaseLazyDataModel extends LazyDataModel<Product> impleme
 	/**
 	 * @param tableRows the tableRows to set
 	 */
+	@Override
 	public void setTableRows(int tableRows) {
 		this.tableRows = tableRows;
 	}

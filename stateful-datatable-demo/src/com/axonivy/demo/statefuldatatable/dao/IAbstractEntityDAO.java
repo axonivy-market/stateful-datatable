@@ -15,8 +15,8 @@ public interface IAbstractEntityDAO<AE extends AbstractEntity> {
 
     /**
      * Defines the DAO class
-     * 
-     * @return
+     *
+     * @return type
      */
     Class<AE> getType();
 
@@ -24,7 +24,7 @@ public interface IAbstractEntityDAO<AE extends AbstractEntity> {
      * save entity in DB
      *
      * @param entity
-     * @return
+     * @return saved
      */
     AE save(AE entity);
 
@@ -36,33 +36,27 @@ public interface IAbstractEntityDAO<AE extends AbstractEntity> {
     void delete(AE entity);
 
     /**
-     * Finds all entities
-     *
-     * @return
+     * @return all entities
      */
     List<AE> getAll();
 
     /**
      * Finds entity by its id
      *
-     * @param ae
-     * @return
+     * @param id
+     * @return entity
      */
     AE getById(String id);
 
     /**
      * Makes query using {@link EntityManager} / {@link CriteriaQuery}
      *
-     * @param cf
-     * @return
+     * @param cc
      */
     List<AE> getByCriteriaQuery(CriteriaQuery<AE> cc);
 
     /**
      * Makes query using {@link EntityManager} / {@link CriteriaQuery}
-     *
-     * @param cf
-     * @return
      */
     List<AE> getByCriteriaQuery(CriteriaQuery<AE> cc, int offset, int resultSize);
 
@@ -71,15 +65,13 @@ public interface IAbstractEntityDAO<AE extends AbstractEntity> {
      * one is found by query, null otherwise.
      *
      * @param cc
-     * @return
      */
     AE getByCriteriaQuerySingle(CriteriaQuery<AE> cc);
 
     /**
      * Returns single result - count of items found by query.
-     * 
+     *
      * @param cc
-     * @return
      */
     Long countByCriteriaQuery(CriteriaQuery<Long> cc);
 }

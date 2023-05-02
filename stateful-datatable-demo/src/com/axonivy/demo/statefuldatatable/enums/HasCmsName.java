@@ -25,9 +25,7 @@ public interface HasCmsName {
 	String name();
 
 	/**
-	 * Return the name entry of the instance.
-	 *
-	 * @return
+	 * @return the name entry of the instance.
 	 */
 	default String getCmsName() {
 		return getCms("name");
@@ -53,11 +51,9 @@ public interface HasCmsName {
 
 	/**
 	 * Lookup the URL of an entry in the Ivy Cms.
-	 * 
-	 * If the entry is not found, then the name of the entry is returned.
-	 * 
+	 *
 	 * @param entry
-	 * @return
+	 * @return If the entry is not found, then the name of the entry is returned.
 	 */
 	default String getCmsUrl(String entry) {
 		String cmsPath = getEntryPath(entry);
