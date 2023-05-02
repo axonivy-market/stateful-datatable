@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.axonivy.demo.statefuldatatable.entity;
 
@@ -24,44 +24,45 @@ public class Product extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(length = 32, nullable = false) 
+	@Column(length = 32, nullable = false)
 	@GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id;
 	//Adding Column STEP 1
 	@Column
 	private Date validThrough;
-	
+
 	@Column
 	private Date orderDate;
-	
+
 	@Column
 	private Date deliveryDate;
-	
+
 	@Column
 	private Integer quantity;
 
 	@Column
 	@Enumerated(EnumType.STRING)
 	private Quality quality;
-	
+
 	@Column
 	@Enumerated(EnumType.STRING)
 	private Availability availability;
-	
+
 	@Column
 	@Enumerated(EnumType.STRING)
 	private ProductStatus productStatus;
-	
+
 	@Column
 	private String productName;
-	
+
 	@Column
 	private Boolean onSale;
 
 	/**
 	 * @return the id
 	 */
+	@Override
 	public String getId() {
 		return id;
 	}
@@ -69,6 +70,7 @@ public class Product extends AbstractEntity {
 	/**
 	 * @param id the id to set
 	 */
+	@Override
 	public void setId(String id) {
 		this.id = id;
 	}

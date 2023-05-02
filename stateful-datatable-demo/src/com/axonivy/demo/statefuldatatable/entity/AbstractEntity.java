@@ -1,6 +1,7 @@
 package com.axonivy.demo.statefuldatatable.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.persistence.MappedSuperclass;
 
@@ -11,13 +12,11 @@ import javax.persistence.MappedSuperclass;
 public abstract class AbstractEntity implements Serializable {
 
 	private static final long serialVersionUID = 4128302279946094433L;
-	
+
 	protected static final String COLUMN_ID = "ID";
 
 	/**
-	 * ID of database entity - getter
-	 *
-	 * @return
+	 * return: ID of database entity
 	 */
 	public abstract String getId();
 
@@ -27,17 +26,17 @@ public abstract class AbstractEntity implements Serializable {
 	 * @param id
 	 */
 	public abstract void setId(String id);
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !AbstractEntity.class.isAssignableFrom(obj.getClass())) {
 			return false;
 		}
 		return getId().equals(((AbstractEntity) obj).getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId());
 	}
 }

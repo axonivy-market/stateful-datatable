@@ -47,14 +47,14 @@ import ch.ivyteam.ivy.environment.Ivy;
 import ch.ivyteam.ivy.security.IUser;
 /**
  * This class server as an underlying bean for the table UI. It loads filter, sort and column data from the user and provides them to the lazy data model.
- * 
+ *
  * @author david.merunko
  *
  */
 public class StateDataTableBean {
 	public static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss zzz yyyy";
 	public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(DATE_FORMAT);
-	
+
 	private ProductLazyDataModel lazyModel = new ProductRepoLazyDataModel();
 	private List<Profile> publicProfiles;
 	private List<Profile> privateProfiles;
@@ -79,8 +79,8 @@ public class StateDataTableBean {
 	 * The map value is a String entered into the filter, with the exception of DatePicker, where it is array list of string values
 	 * representing Date objects, these need to be parsed to Date object and Status filter which uses checkbox select and also provides
 	 * array of values, since these are array of objects, you need to differentiate them by their key.
-	 * The same map that is provided as a parameter to the load method of a lazy data model. 
-	 * 
+	 * The same map that is provided as a parameter to the load method of a lazy data model.
+	 *
 	 * @return Map of filters
 	 */
 	private Map<String, FilterMeta> getFilterStateFromIUser() {
@@ -97,11 +97,11 @@ public class StateDataTableBean {
 			} catch(JsonProcessingException e) {
 				Ivy.log().error("Couldn't parse JSON into map", e);
 			}
-			
+
 			if(filters == null || filters.isEmpty()) {
 				return null;
 			}
-			
+
 			//If the value is an arraylist it is the datePicker filter which needs to be parsed to date
 			for(Entry<String, FilterMeta> filter : filters.entrySet()) {
 				if(filter.getValue().getFilterValue() instanceof ArrayList) {
@@ -113,7 +113,7 @@ public class StateDataTableBean {
 					} else if(ProductRepoLazyDataModel.AVAILABILITY_FILTER.equals(filter.getKey())) {
 						setDropdownFilterValue(filter, ((ArrayList<?>) filter.getValue().getFilterValue()).size(), Availability.class);
 					} else {
-						setDateFilterValue(filter, 
+						setDateFilterValue(filter,
 								ProductRepoLazyDataModel.VALID_THROUGH_FILTER,
 								ProductRepoLazyDataModel.ORDER_DATE_FILTER,
 								ProductRepoLazyDataModel.DELIVERY_DATE_FILTER);
@@ -124,7 +124,7 @@ public class StateDataTableBean {
 
 		return filters;
 	}
-	
+
 	private void setDropdownFilterValue(Entry<String, FilterMeta> filter, int filterSize, Class clazz) {
 		Object[] resultObjectArray = new Object[filterSize];
 		List<String> statusList = (List<String>) filter.getValue().getFilterValue();
@@ -133,7 +133,7 @@ public class StateDataTableBean {
 		}
 		filter.getValue().setFilterValue(resultObjectArray);
 	}
-	
+
 	private void setDateFilterValue(Entry<String, FilterMeta> filter, String... filterNames) {
 		for(String filterName : filterNames) {
 			if(filterName.equals(filter.getKey())) {
@@ -146,7 +146,7 @@ public class StateDataTableBean {
 			}
 		}
 	}
-	
+
 	class ValueExpressionEntityDeserializer extends JsonDeserializer<ValueExpression> {
 	    @Override
 	    public ValueExpression deserialize(JsonParser p, DeserializationContext ctxt)
@@ -157,8 +157,8 @@ public class StateDataTableBean {
 
 	/**
 	 * Method that take IUsers "SORT_SEARCH" property and extract a list of maps where each map has a sortField and sortOrder keys, that holds the name and sort order as values.
-	 * The map is then parsed into a SortMeta object that is used in lazy data model for sorting. 
-	 * 
+	 * The map is then parsed into a SortMeta object that is used in lazy data model for sorting.
+	 *
 	 * @return List of SortMeta objects
 	 */
 	private Map<String, SortMeta> getSortMetaFromIUser() {
@@ -180,11 +180,11 @@ public class StateDataTableBean {
 
 		return sortMetaMap;
 	}
-	
+
 	/**
-	 * Returns the visibility data for table columns from the IUser property COLUMN_VISIBILITY. The property holds an ordered list of booleans that represent the visibility. 
-	 * The order of the list corresponds to the order of the columns. 
-	 * 
+	 * Returns the visibility data for table columns from the IUser property COLUMN_VISIBILITY. The property holds an ordered list of booleans that represent the visibility.
+	 * The order of the list corresponds to the order of the columns.
+	 *
 	 * @return Ordered list of visibility booleans
 	 */
 	private Map<String, Boolean> getColumnVisibilityFromIUser() {
@@ -197,25 +197,25 @@ public class StateDataTableBean {
 			Type mapType = new TypeToken<Map<String, Boolean>>() {}.getType();
 			columnVisibility = objGson.fromJson(columnVisibilityJson, mapType);
 		}
-		
+
 		DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent(ProductRepoLazyDataModel.TABLE_UI_PATH);
 		for(UIColumn column : dataTable.getColumns()) {
 			if(!columnVisibility.containsKey(column.getColumnKey().replace(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX, ""))) {
 				columnVisibility.put(column.getColumnKey().replace(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX, ""), true);
 			}
 		}
-		
+
 		return columnVisibility;
 	}
 
 	/**
 	 * Restore data from IUser session and set to model
 	 */
-	public void restoreDataFromSessionUser() {		
+	public void restoreDataFromSessionUser() {
 		lazyModel.setFiltersFromIUser(getFilterStateFromIUser());
-		
+
 		Map<String, SortMeta> sortMetaMap = getSortMetaFromIUser();
-		
+
 		if(sortMetaMap == null || sortMetaMap.isEmpty()) {
 			SortMeta customerSort = SortMeta.builder().field(ProductRepoLazyDataModel.PRODUCT_NAME_FILTER).order(SortOrder.DESCENDING).build();
 			SortMeta testDateSort = SortMeta.builder().field(ProductRepoLazyDataModel.VALID_THROUGH_FILTER).order(SortOrder.DESCENDING).build();
@@ -223,9 +223,9 @@ public class StateDataTableBean {
 			sortMetaMap.put(ProductRepoLazyDataModel.PRODUCT_NAME_FILTER, customerSort);
 			sortMetaMap.put(ProductRepoLazyDataModel.VALID_THROUGH_FILTER, testDateSort);
 		}
-		
+
 		List<SortMeta> sortMetaList = new ArrayList<>();
-		
+
 		for(Entry<String, SortMeta> sortMeta : sortMetaMap.entrySet()) {
 			UIViewRoot viewRoot =  FacesContext.getCurrentInstance().getViewRoot();
 	        UIComponent column = viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX + sortMeta.getValue().getField().replace("\\.", "_") + "Column");
@@ -234,10 +234,10 @@ public class StateDataTableBean {
 	        currentSortMeta.setPriority(sortMeta.getValue().getPriority());
 	        sortMetaList.add(currentSortMeta);
 		}
-			
+
 		lazyModel.setSortBy(sortMetaList);
 		lazyModel.setColumnVisibility(getColumnVisibilityFromIUser());
-		
+
 		String profileName = Ivy.session().getSessionUser().getProperty("CURRENT_PROFILE_NAME");
 		if(profileName != null && !profileName.isBlank()) {
 			for(Profile profile : publicProfiles) {
@@ -245,29 +245,29 @@ public class StateDataTableBean {
 					selectedProfile = profile;
 				}
 			}
-			
+
 			for(Profile profile : privateProfiles) {
 				if(profile.getProfileName().equals(profileName)) {
 					selectedProfile = profile;
 				}
 			}
 		}
-		
+
 		int tableRows = Ivy.session().getSessionUser().getProperty("TABLE_ROWS") != null ? Integer.parseInt(Ivy.session().getSessionUser().getProperty("TABLE_ROWS")) : 10;
 		lazyModel.setTableRows(tableRows);
-		
+
 		PrimeFaces.current().executeScript("PF('productTable').filter()");
 	}
-	
-	public void onRefresh() {		
+
+	public void onRefresh() {
 		lazyModel.setUseSavedFilters(true);
 		lazyModel.setUseSavedSorting(true);
 	}
-	
+
 	public void resetTableState() {
 		publicProfiles = Ivy.repo().search(Profile.class).textField("profileType").containsPhrase(ProfileType.ALL_USERS.name()).execute().getAll();
 		privateProfiles = Ivy.repo().search(Profile.class).textField("profileType").containsPhrase(ProfileType.ONLY_ME.name()).and().textField("user").containsPhrase(Ivy.session().getSessionUserName()).execute().getAll();
-		
+
 		selectedProfile = null;
 
 		lazyModel.getFiltersFromIUser().clear();
@@ -277,15 +277,15 @@ public class StateDataTableBean {
 		DataTable dataTable = (DataTable) viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_UI_PATH);
 		//Check
 		dataTable.reset();
-		
+
 		List<SortMeta> sortMetaList = new ArrayList<>();
 
 		SortMeta customerSort = SortMeta.builder().field(ProductRepoLazyDataModel.PRODUCT_NAME_FILTER).order(SortOrder.DESCENDING).build();
 		SortMeta testDateSort = SortMeta.builder().field(ProductRepoLazyDataModel.VALID_THROUGH_FILTER).order(SortOrder.DESCENDING).build();
-		
+
 		sortMetaList.add(customerSort);
 		sortMetaList.add(testDateSort);
-		
+
 		for(SortMeta sortMeta : sortMetaList) {
 	        UIComponent column = viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX + sortMeta.getField().replace("\\.", "_") + "Column");
 	        SortMeta currentSortMeta = SortMeta.of(FacesContext.getCurrentInstance(), ProductRepoLazyDataModel.TABLE_UI_PATH, (UIColumn) column);
@@ -293,10 +293,10 @@ public class StateDataTableBean {
 	        currentSortMeta.setPriority(sortMeta.getPriority());
 	        sortMeta = currentSortMeta;
 		}
-			
+
 		lazyModel.setSortBy(sortMetaList);
-	    
-		
+
+
 		Map<String, Boolean> columnVisibility = new HashMap<>();
 		for(UIColumn column : dataTable.getColumns()) {
 			if(!columnVisibility.containsKey(column.getColumnKey().replace(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX, ""))) {
@@ -306,13 +306,13 @@ public class StateDataTableBean {
 		lazyModel.setColumnVisibility(columnVisibility);
 		lazyModel.setUseSavedFilters(true);
 		lazyModel.setUseSavedSorting(true);
-		
+
 		Ivy.session().getSessionUser().setProperty("CURRENT_PROFILE_NAME",  "");
 		lazyModel.saveColumnVisibilityToIUser(null);
 
 		PrimeFaces.current().executeScript("PF('productTable').filter()");
 	}
-	
+
 	/**
 	 * Restores filtering, sorting and column visibility from chosen profile
 	 * @param profile
@@ -321,36 +321,36 @@ public class StateDataTableBean {
 		selectedProfile = profile;
 		profileChanged = true;
 		lazyModel.setFiltersFromIUser(profile.getFilters());
-		
+
 		Map<String, SortMeta> sorting = new HashMap<>();
 		sorting.putAll(profile.getSorting());
-		
+
 		UIViewRoot viewRoot =  FacesContext.getCurrentInstance().getViewRoot();
-        
+
 		List<SortMeta> sortingList = new ArrayList<>();
-		
+
 		for(Entry<String, SortMeta> sortMeta : sorting.entrySet()) {
 	        UIComponent column = viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_LAZY_PREFIX + sortMeta.getValue().getField().replace("\\.", "_") + "Column");
 	        sortMeta.setValue(SortMeta.of(FacesContext.getCurrentInstance(), ProductRepoLazyDataModel.TABLE_UI_PATH, (UIColumn) column));
 	        sortingList.add(sortMeta.getValue());
 		}
-		
+
 		//Workaround for sorting not updating after profile apply if the user sorted before it
 		DataTable dataTable = (DataTable) viewRoot.findComponent(ProductRepoLazyDataModel.TABLE_UI_PATH);
 		//Check
 		dataTable.setSortBy(lazyModel.getSortBy());
-	    
+
 		lazyModel.setSortBy(sortingList);
 		lazyModel.getColumnVisibility().putAll(profile.getVisibility());
 		lazyModel.setUseSavedFilters(true);
 		lazyModel.setUseSavedSorting(true);
-		
+
 		Ivy.session().getSessionUser().setProperty("CURRENT_PROFILE_NAME",  selectedProfile.getProfileName());
 		lazyModel.saveColumnVisibilityToIUser(null);
-		
+
 		PrimeFaces.current().executeScript("PF('productTable').filter()");
 	}
-	
+
 	/**
 	 * Saves current state of filtering, sorting and column visibility to a profile. The sortMeta must not have column set, as that
 	 * causes problem.
@@ -360,13 +360,13 @@ public class StateDataTableBean {
 		final String profileName = newProfile.getProfileName();
 		if(privateProfiles.stream().anyMatch(p -> p.getProfileName().equals(profileName))
 				|| publicProfiles.stream().anyMatch(p -> p.getProfileName().equals(profileName))) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Profil mit gleichem Namen existiert bereits!", null)); 
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Profil mit gleichem Namen existiert bereits!", null));
 			FacesContext.getCurrentInstance().validationFailed();
 			return;
-			
+
 		}
 		newProfile.setFilters(lazyModel.getFiltersFromIUser());
-		
+
 		Map<String, SortMeta> sorting = new HashMap<>();
 		for(SortMeta sortMeta : lazyModel.getSortBy()) {
 		sorting.put(sortMeta.getField(), sortMeta);
@@ -377,21 +377,21 @@ public class StateDataTableBean {
 		newProfile.setSorting(sorting);
 		newProfile.setVisibility(lazyModel.getColumnVisibility());
 		newProfile.setUser(Ivy.session().getSessionUserName());
-		
+
 		Ivy.repo().save(newProfile);
-		
+
 		if(newProfile.getProfileType() == ProfileType.ONLY_ME) {
 			privateProfiles.add(ProfileService.copyProfile(newProfile));
 		} else {
 			publicProfiles.add(ProfileService.copyProfile(newProfile));
 		}
-		
+
 		selectedProfile = ProfileService.copyProfile(newProfile);
-		
+
 		Ivy.session().getSessionUser().setProperty("CURRENT_PROFILE_NAME",  selectedProfile.getProfileName());
 		newProfile = new Profile();
 	}
-	
+
 	/**
 	 * Deletes profile in business data
 	 */
@@ -400,19 +400,18 @@ public class StateDataTableBean {
 			selectedProfile = null;
 		}
 		Ivy.repo().delete(profileToDelete);
-		
+
 		publicProfiles.remove(profileToDelete);
-		privateProfiles.remove(profileToDelete);		
+		privateProfiles.remove(profileToDelete);
 	}
-	
+
 	/**
 	 * Saves column visibility to IUser.
-	 * @param ToggleEvent
 	 */
 	public void columnVisibilityChanged(ToggleEvent e) {
 		lazyModel.saveColumnVisibilityToIUser(e);
 	}
-	
+
 	public String showProfileName() {
 		if(selectedProfile != null) {
 			return selectedProfile.getProfileName();
@@ -420,9 +419,9 @@ public class StateDataTableBean {
 			return "Default";
 		} else {
 			return "Benutzerdefiniertes Profil";
-		} 
+		}
 	}
-	
+
 	/**
 	 * Resets profile shown in the table when filter, sorting or visibility is changed.
 	 */
@@ -431,7 +430,7 @@ public class StateDataTableBean {
 			profileChanged = false;
 			return;
 		}
-				
+
 		if(selectedProfile.getFilters().size() != lazyModel.getFiltersFromIUser().size()
 				|| selectedProfile.getSorting().size() != lazyModel.getSortBy().size()
 				|| selectedProfile.getVisibility().size() != lazyModel.getColumnVisibility().size()) {
@@ -439,11 +438,11 @@ public class StateDataTableBean {
 			Ivy.session().getSessionUser().setProperty("CURRENT_PROFILE_NAME",  "");
 			return;
 		}
-		
+
 		for(Entry<String, FilterMeta> entry : selectedProfile.getFilters().entrySet()) {
 			Object filter = lazyModel.getFiltersFromIUser().get(entry.getKey());
 			if(filter instanceof String) {
-				if(filter == null || !((String) filter).equals((String)entry.getValue().getFilterValue())) {
+				if(filter == null || !((String) filter).equals(entry.getValue().getFilterValue())) {
 					selectedProfile = null;
 					Ivy.session().getSessionUser().setProperty("CURRENT_PROFILE_NAME",  "");
 					return;
@@ -452,13 +451,13 @@ public class StateDataTableBean {
 			if(filter instanceof ArrayList) {
 				ArrayList<?> profileFilter = (ArrayList<?>) entry.getValue().getFilterValue();
 				ArrayList<?> modelFilter = (ArrayList<?>) filter;
-				
+
 				if(filter == null || profileFilter.size() != modelFilter.size()) {
 					selectedProfile = null;
 					Ivy.session().getSessionUser().setProperty("CURRENT_PROFILE_NAME",  "");
 					return;
 				}
-				
+
 				for(int i = 0; i < profileFilter.size(); i++) {
 					if(!profileFilter.get(0).equals(modelFilter.get(0))) {
 						selectedProfile = null;
@@ -468,7 +467,7 @@ public class StateDataTableBean {
 				}
 			}
 		}
-		
+
 		for(int i = 0; i < selectedProfile.getSorting().size(); i++) {
 			if (!lazyModel.getSortBy().get(i).getField().equals(selectedProfile.getSorting().get(lazyModel.getSortBy().get(i).getField()).getField())
 					|| lazyModel.getSortBy().get(i).getOrder() != selectedProfile.getSorting().get(lazyModel.getSortBy().get(i).getField()).getOrder()) {
@@ -477,7 +476,7 @@ public class StateDataTableBean {
 				return;
 			}
 		}
-		
+
 		for(Entry<String, Boolean> visibility : lazyModel.getColumnVisibility().entrySet()) {
 			if (selectedProfile.getVisibility().get(visibility.getKey()) != visibility.getValue()) {
 				selectedProfile = null;
@@ -579,7 +578,7 @@ public class StateDataTableBean {
 	}
 
 	/**
-	 * @param distributrOrderStatusList the distributrOrderStatusList to set
+	 * @param productStatusList the distributrOrderStatusList to set
 	 */
 	public void setDistributrOrderStatusList(List<ProductStatus> productStatusList) {
 		this.productStatusList = productStatusList;
@@ -593,7 +592,7 @@ public class StateDataTableBean {
 	}
 
 	/**
-	 * @param selectedDistributorOrder the selectedDistributorOrder to set
+	 * @param selectedProduct the selectedDistributorOrder to set
 	 */
 	public void setSelectedDistributorOrder(Product selectedProduct) {
 		this.selectedProduct = selectedProduct;
