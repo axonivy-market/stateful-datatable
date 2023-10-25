@@ -2,6 +2,7 @@
 <userConfig>
     <user>
         <username>tester</username>
+        <password>tester</password>
         <fullName>Tester</fullName>
     </user>
 </userConfig>

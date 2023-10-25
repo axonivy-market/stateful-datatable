@@ -6,6 +6,29 @@
   <artifactId>stateful-datatable-test</artifactId>
   <version>10.0.3-SNAPSHOT</version>
   <packaging>iar-integration-test</packaging>
+  <properties>
+    <webtester.version>10.0.14-SNAPSHOT</webtester.version>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
+
   <dependencies>
     <dependency>
       <groupId>com.axonivy.demo.statefuldatatable</groupId>
@@ -16,7 +39,7 @@
     <dependency>
       <groupId>com.axonivy.ivy.webtest</groupId>
       <artifactId>web-tester</artifactId>
-      <version>10.0.0</version>
+      <version>${webtester.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
