@@ -9,5 +9,3 @@ on:
 jobs:
   build:
     uses: axonivy-market/github-workflows/.github/workflows/ci.yml@v2
-    with:
-      mvnArgs: -Divy.engine.version=10.0.14
