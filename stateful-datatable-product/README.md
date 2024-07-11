@@ -1,6 +1,15 @@
 # Stateful Datatable
 
-A utility Dialog to implement a stateful-datatable with Ivy and Primefaces.
+A utility dialog for implementing a stateful Datatable using Ivy and PrimeFaces. This Datatable stands out because it retains 
+its state across various interactions. Actions like 
+
+- sorting
+- filtering
+- pagination
+
+remain intact even after a page reload or switching to a different view. This allows for seamless and efficient use, as you won't need to reconfigure your settings each time. 
+
+**Experience improved usability with our stateful Axon Ivy Datatable!**
 
 ## Demo
 
