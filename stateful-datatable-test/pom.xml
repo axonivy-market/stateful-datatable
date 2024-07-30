@@ -7,7 +7,7 @@
   <packaging>iar-integration-test</packaging>
   <properties>
     <project.build.plugin.version>10.0.16</project.build.plugin.version>
-    <webtester.version>10.0.16</webtester.version>
+    <webtester.version>10.0.14</webtester.version>
   </properties>
 
   <repositories>
