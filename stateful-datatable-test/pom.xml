@@ -7,7 +7,7 @@
   <packaging>iar-integration-test</packaging>
   <properties>
     <project.build.plugin.version>10.0.16</project.build.plugin.version>
-    <webtester.version>10.0.14</webtester.version>
+    <tester.version>10.0.16</tester.version>
   </properties>
 
   <repositories>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>com.axonivy.ivy.webtest</groupId>
       <artifactId>web-tester</artifactId>
-      <version>${webtester.version}</version>
+      <version>${tester.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
