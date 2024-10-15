@@ -1,18 +1,16 @@
 # Stateful Datatable
 
-Ein Utility-Dialog zur Implementierung einer zustandsbehafteten Datatable mit Ivy und PrimeFaces. Diese Datatable zeichnet sich dadurch aus, dass sie ihren Zustand über verschiedene Interaktionen hinweg beibehält. Aktionen wie 
+Ein Utility-Dialog zur Implementierung einer zustandsbehafteten (stateful) Datentabelle mit Ivy und PrimeFaces. Diese Datentabelle zeichnet sich dadurch aus, dass sie ihren Zustand über verschiedene Interaktionen hinweg beibehält. Aktionen wie 
 
 - Sortierung
 - Filterung
 - Paginierung
 
-bleiben auch nach einem Neuladen der Seite oder dem Wechsel zu einer anderen Ansicht erhalten. Das ermöglicht eine nahtlose und effiziente Nutzung, da Du Deine Einstellungen nicht jedes Mal neu konfigurieren musst. 
-
-**Erlebe eine verbesserte Benutzerfreundlichkeit mit unserer zustandsbehafteten Axon Ivy Datatable!**
+bleiben auch nach einem Neuladen der Seite oder dem Wechsel zu einer anderen Ansicht erhalten. Das ermöglicht eine nahtlose und effiziente Nutzung.
 
 ## Demo
 
-In dieser Demo wird eine lazy Datatable verwendet, um alle verfügbaren Produkte aus der Datenbank oder dem Ivy Business-Repository aufzulisten.
+In dieser Demo wird eine lazy Datentabelle verwendet, um alle verfügbaren Produkte aus der Datenbank oder dem Ivy Business-Repository aufzulisten.
 
 ![Liste der Produkte](DemoCapture.png "Liste der Produkte")
 
