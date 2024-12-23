@@ -29,39 +29,31 @@
     "modifiers" : [ "PERSISTENT" ]
   }, {
     "name" : "privateProfiles",
-    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>"
   }, {
     "name" : "publicProfiles",
-    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>"
   }, {
     "name" : "selectedProduct",
-    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Product>",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Product>"
   }, {
     "name" : "selectedProfile",
-    "type" : "com.axonivy.demo.statefuldatatable.entity.Profile",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "com.axonivy.demo.statefuldatatable.entity.Profile"
   }, {
     "name" : "streamedContent",
-    "type" : "org.primefaces.model.DefaultStreamedContent",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "org.primefaces.model.DefaultStreamedContent"
   }, {
     "name" : "tableRows",
     "type" : "Integer",
     "modifiers" : [ "PERSISTENT" ]
   }, {
     "name" : "stateDataTableBean",
-    "type" : "com.axonivy.demo.statefuldatatable.ui.StateDataTableBean",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "com.axonivy.demo.statefuldatatable.ui.StateDataTableBean"
   }, {
     "name" : "multiChangeState",
-    "type" : "com.axonivy.demo.statefuldatatable.enums.ProductStatus",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "com.axonivy.demo.statefuldatatable.enums.ProductStatus"
   }, {
     "name" : "product",
-    "type" : "com.axonivy.demo.statefuldatatable.entity.Product",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "com.axonivy.demo.statefuldatatable.entity.Product"
   } ]
 }
