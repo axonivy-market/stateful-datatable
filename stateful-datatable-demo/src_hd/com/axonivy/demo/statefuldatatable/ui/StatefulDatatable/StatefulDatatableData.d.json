@@ -1,0 +1,67 @@
+{
+  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "simpleName" : "StatefulDatatableData",
+  "namespace" : "com.axonivy.demo.statefuldatatable.ui.StatefulDatatable",
+  "isBusinessCaseData" : false,
+  "fields" : [ {
+    "name" : "copyValid",
+    "type" : "Boolean",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "editedRowKey",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "field",
+    "type" : "String",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "isProfileAdmin",
+    "type" : "Boolean",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "newObjects",
+    "type" : "List<java.lang.Object>",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "numberOfCopies",
+    "type" : "Integer",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "privateProfiles",
+    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "publicProfiles",
+    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "selectedProduct",
+    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Product>",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "selectedProfile",
+    "type" : "com.axonivy.demo.statefuldatatable.entity.Profile",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "streamedContent",
+    "type" : "org.primefaces.model.DefaultStreamedContent",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "tableRows",
+    "type" : "Integer",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "stateDataTableBean",
+    "type" : "com.axonivy.demo.statefuldatatable.ui.StateDataTableBean",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "multiChangeState",
+    "type" : "com.axonivy.demo.statefuldatatable.enums.ProductStatus",
+    "modifiers" : [ "PERSISTENT" ]
+  }, {
+    "name" : "product",
+    "type" : "com.axonivy.demo.statefuldatatable.entity.Product",
+    "modifiers" : [ "PERSISTENT" ]
+  } ]
+}
