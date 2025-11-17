@@ -1,81 +1,123 @@
 # Stateful Datatable
 
-Ein Utility-Dialog zur Implementierung einer zustandsbehafteten (stateful) Datentabelle mit Ivy und PrimeFaces. Diese Datentabelle zeichnet sich dadurch aus, dass sie ihren Zustand über verschiedene Interaktionen hinweg beibehält. Aktionen wie 
+Ein Nutzen Zwiegespräch für implementieren ein stateful Datatable benutzend Efeu
+und PrimeFaces. Dies Datatable Stände aus weil hält fest es seinen Staat über
+verschiedene Interaktionen. Aktionen #mögen
 
-- Sortierung
-- Filterung
-- Paginierung
+- Ordnen
+- Filtern
+- Seitennummerierung
 
-bleiben auch nach einem Neuladen der Seite oder dem Wechsel zu einer anderen Ansicht erhalten. Das ermöglicht eine nahtlose und effiziente Nutzung.
+Verharr sogar intakt nach einer Seite reload oder schalten zu einem
+verschiedenen Ausblick. Dies erlaubt für nahtlos und leistungsstarke Nutzung, da
+du willst nicht brauchen zu reconfigure eure Lagen jede Zeit.
+
+**#Erfahren verbessert #Brauchbarkeit mit unser stateful #Axon Efeu Datatable!**
 
 ## Demo
 
-In dieser Demo wird eine lazy Datentabelle verwendet, um alle verfügbaren Produkte aus der Datenbank oder dem Ivy Business-Repository aufzulisten.
+In dieser Demo, ein faules datatable ist listen alle die Produkte verfügbar in
+die #Daten Basis oder in das Efeu Geschäft repo.
 
-![Liste der Produkte](DemoCapture.png "Liste der Produkte")
+![Liste von Produkte](DemoCapture.png "Liste von Produkte")
 
-## Setup
+## Einrichtung
 
-- Bevor Du startest, muss eine Datenbank eingerichtet und das Schema aus der Persistence Unit generiert werden.
-- Danach starte den Testprozess: `Create Test Data Database`, um die Testdaten für die Demo zu generieren.
+ - Vor starten, eine #Daten Basis Notwendigkeiten zu sein Einrichtung und dann
+   generieren das Schema von die Beharrlichkeit Einheit.
+ - #Nächste, starte den Klausur Arbeitsgang: `Schafft Klausur #Daten Datenbank`
+   zu generieren #der Klausur #Daten für die Demo.
 
-- Wenn Du die stateful-datatable mit dem Ivy Business-Repo starten möchtest, musst Du die Datenbank nicht einrichten. Starte einfach den Testprozess: `Create Test Data Repo`.
+ - Ob du brauchst zu starten das stateful-datatable mit Efeu Geschäft repo,
+   keine Notwendigkeit zu Einrichtung die #Daten Basis aber du einzige
+   Notwendigkeit zu starten den Klausur Arbeitsgang: `Schafft Klausur #Daten
+   Repo`.
 
-## Wie man eine Spalte hinzufügt:
+## Wie zu zufügen ein colum:
 
-Hinweis: Im bereitgestellten Demo-Code ist jeder Schritt mit Kommentaren wie `Adding columns STEP 1`, `Adding columns STEP 2` usw. markiert.
+Der Ort jede Stufe findet statt hat einen Kommentar mag `#Zufügen Spalten STUFE
+1`, `#Zufügen Spalten STUFE 2` #und so weiter.
 
-1. **STEP 1 (Product):**
+1. SCHREITE 1 (Produkt):
 
-Füge ein Feld mit dem gewünschten Typ zum Produkt hinzu, z.B. `Date creationDate` mit Getter und Setter, und annotiere es mit `@Column`.
+Füg zu ein Feld mit gewünscht Typ zu dem Produkt, #d.h. Datiert creationDate mit
+getter und #Setter und annotiert mit @Spalte.
 
-2. **STEP 2 (StatefulDatatable.xhtml):**
+2. STUFE 2 (StatefulDatatable.xhtml):
 
-- Kopiere eine Spalte des gewünschten Typs in die StatefulDatatable.xhtml und füge sie ein.
-- Benenne die Spalten-ID um, aber sie muss mit `Column` enden, z.B. `creationDateColumn`.
-- Ändere `sortBy` und `filterBy`, sodass sie auf das Feld im Produkt verweisen, z.B. `#{product.creationDate}`.
-- Passe den Header-Text an und aktualisiere den Wert des benutzerdefinierten Filters, z.B. `#{data.stateDataTableBean.lazyModel.filterText.get('creationDate')}`.
-- Ändere die Ausgabe- und Eingabewerte, sodass sie auf das Feld im Produkt verweisen, z.B. `#{product.creationDate}`.
-- Aktualisiere die Werte für `exportable` und `visible`, sodass sie auf die Spalte verweisen, z.B. `#{data.stateDataTableBean.lazyModel.columnVisibility.get('deliveryDateColumn')}`.
+ - Kopier eine Spalte mit die gewünscht #eintippen die StatefulDatatable.xhtml
+   Und #bekleben ihm.
+ - Benenn um die Spalte id, aber es muss haben `Spalte` am Ende, #d.h.
+   `creationDateColumn`.
+ - Wechsel sortBy und filterBy zu anrichten das Feld in dem Produkt, #d.h.
+   `#{Produkt.creationDate}`.
+ - Änderung Kopfball Text zu zeigen den Text du willst. Wechsel den Wert von dem
+   #benutzerdefiniert Filter, #d.h.
+   `#{#Daten.stateDataTableBean.lazyModel.filterText.Bekomm('creationDates)}`.
+ - Änderung Ausgabe und Input Werte zu anrichten das Feld in dem Produkt, #d.h.
+   `#{Produkt.creationDate}`
+ - Wechsel exportable und sichtbare Werte zu anrichten die Spalte, #d.h.
+   `#{#Daten.stateDataTableBean.lazyModel.columnVisibility.Bekomm('deliveryDateColumns)}`
 
-3. **STEP 3 (ProductDatabaseLazyDataModel und/oder ProductRepoLazyDataModel):**
+3. STUFE 3 (ProductDatabaseLazyDataModel und/oder ProductRepoLazyDataModel):
 
-- Alle Änderungen erfolgen entweder im `ProductDatabaseLazyDataModel` oder im `ProductRepoLazyDataModel`, abhängig von der verwendeten Speicherart. Sie werden als `LazyModel` bezeichnet.
-- Füge den Filter-Namen als Konstante im LazyModel hinzu, z.B. `public static final String CREATION_DATE_FILTER = "creationDate";`. Diese Konstante sollte denselben Namen wie das Feld haben.
+ - Jede diese Änderungen passieren in #jeder ProductDatabaseLazyDataModel oder
+   ProductRepoLazyDataModel gegründet auf was Speicher benutzt du. Sie wollen
+   sein refered da LazyModel
+ - Füg zu Filter Namen da ein stetiges herein LazyModel, #d.h. `öffentliche
+   Statik endgültige Schnur KREATION_DATUM_FILTERT = "creationDate";` Diese
+   Konstante sollte gleichen Namen da das Feld haben.
 
-4. **STEP 4 (ProductDatabaseLazyDataModel und/oder ProductRepoLazyDataModel):**
+4. STUFE 4 (ProductDatabaseLazyDataModel und/oder ProductRepoLazyDataModel):
 
-- Füge im `LazyModel` in der `load`-Methode einen Aufruf zur Filterung basierend auf dem Filtertyp hinzu und ändere den Parameter der Konstante auf die, die Du hinzugefügt hast, z.B. für ein Datum: `addDateRangeQueryFilter(query, CREATION_DATE_FILTER, filters, false);` im `ProductRepoLazyDataModel` oder `addDateRangeQueryFilter(predicates, cb, root, CREATION_DATE_FILTER, filters, false);` im `ProductDatabaseLazyDataModel`.
+ - Herein das LazyModel, in Ladung Methode fügt zu Anruf zu einer Methode für
+   filtern gegründet auf dem Typ von filtern und wechseln den Parameter von das
+   stetiges zu #derjenige du fügtest zu, #d.h. für datieren #zufügen
+   `addDateRangeQueryFilter(Anfrage, KREATION_DATUM_FILTER, Filter, falsch);`
+   Herein ProductRepoLazyDataModel oder addDateRangeQueryFilter(Satzaussagen,
+   cb, Wurz, KREATION_DATUM_FILTER, Filter, falsch); Herein
+   ProductDatabaseLazyDataModel
 
-5. **STEP 5 (ProductDatabaseLazyDataModel und/oder ProductRepoLazyDataModel):**
+5. STUFE 5 (ProductDatabaseLazyDataModel und/oder ProductRepoLazyDataModel):
 
-- Füge im `LazyModel` in der Methode `updateProduct` ein `else if` mit Deiner Konstante und einem Setter für das Produkt hinzu, z.B.
+ - Herein das LazyModel, herein das updateProduct Methode, füg zu sonst ob mit
+   eure stetiges und #Setter zu dem Produkt, ie.
 
-   ```java
-   else if (field.contains(CREATION_DATE_FILTER)) {
-      DateTime dateTime = (DateTime) newObjects.get(0);
-      product.setCreationDate(dateTime.toJavaDate());
-   }
-   ```
+    ```
 
-- Hier kannst Du auch Validierungen hinzufügen.
+        else if (field.contains(CREATION_DATE_FILTER)) {
+            DateTime dateTime = (DateTime) newObjects.get(0);
+            product.setCreationDate(dateTime.toJavaDate());
+        }
 
-6. **STEP 6 (StateDataTableBean):**
+    ```
 
-- Wenn Du einen Dropdown-Filter verwendest, füge ein `if else` mit der geänderten Konstante und der Enum-Klasse, die Du verwendest, zur Schleife in der Methode `getFilterStateFromIUser()` hinzu, z.B.
+ - Du kannst auch irgendwelche Bestätigung zufügen hier
 
-   ```java
-   else if(ProductRepoLazyDataModel.NEW_ENUM_FILTER.equals(filter.getKey())) {
-      setDropdownFilterValue(filter, ((ArrayList<?>) filter.getValue()).size(), NewEnum.class);
-   }
-   ```
+6. STUFE 6 (StateDataTableBean):
 
-- Wenn Du einen Datumsfilter verwendest, füge die Konstante zum Aufruf der Methode `setDateFilterValue` in der Schleife der Methode `getFilterStateFromIUser()` hinzu, z.B.
+ - Ob benutzend ein dropdown Filter, füg zu ob sonst mit #abgeändert Konstante
+   und enum #eingruppieren dir bist benutzen zu die für Rad fährst herein
+   getFilterStateFromIUser() Methode, #d.h.
 
-   ```java
-   setDateFilterValue(filter, 
-      ProductRepoLazyDataModel.VALID_THROUGH_FILTER,
-      ProductRepoLazyDataModel.ORDER_DATE_FILTER,
-      ProductRepoLazyDataModel.DELIVERY_DATE_FILTER,
-      ProductRepoLazyDataModel.CREATION_DATE_FILTER);
-   ```
+    ```
+
+        else if(ProductRepoLazyDataModel.NEW_ENUM_FILTER.equals(filter.getKey())) {
+            setDropdownFilterValue(filter, ((ArrayList<?>) filter.getValue()).size(), NewEnum.class);
+        }
+
+    ```
+
+ - Ob usign ein Datum Filter, füg zu das Stetiges zu der setDateFilterValue
+   Methode Anruf zu den für Rad fährt herein getFilterStateFromIUser() Methode,
+   #d.h.
+
+    ```
+
+        setDateFilterValue(filter, 
+                ProductRepoLazyDataModel.VALID_THROUGH_FILTER,
+                ProductRepoLazyDataModel.ORDER_DATE_FILTER,
+                ProductRepoLazyDataModel.DELIVERY_DATE_FILTER,
+                ProductRepoLazyDataModel.CREATION_DATE_FILTER);
+
+    ```
