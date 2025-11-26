@@ -23,7 +23,7 @@ Datenbank oder im Ivy-Business-Repo verfügbar sind.
 
 ![Liste der Produkte](DemoCapture.png "Liste der Produkte")
 
-## Einrichtung
+## Setup
 
  - Bevor Sie beginnen, muss eine Datenbank eingerichtet und anschließend das
    Schema aus der Persistenz-Einheit generiert werden.
