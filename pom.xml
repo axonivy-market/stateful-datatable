@@ -7,13 +7,13 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>${project.name}-demo</module>
-    <module>${project.name}-test</module>
-    <module>${project.name}-product</module>
+    <module>stateful-datatable-demo</module>
+    <module>stateful-datatable-test</module>
+    <module>stateful-datatable-product</module>
   </modules>
 
   <scm>
-    <developerConnection>scm:git:https://github.com/axonivy-market/${project.name}.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/axonivy-market/stateful-datatable.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
