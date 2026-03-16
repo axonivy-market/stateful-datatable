@@ -24,7 +24,7 @@ In this demo, a lazy datatable is listing all the products available in the data
 
  - If you need to start the stateful-datatable with Ivy business repo, no need to setup the data base but you only need to start the test process: `Create Test Data Repo`.
 
-## How to add a colum:
+## How to add a column:
 
 The place each step takes place has a comment like `Adding columns STEP 1`, `Adding columns STEP 2` and so on.
 
@@ -43,7 +43,7 @@ Add a field with desired type to the Product, i.e. Date creationDate with getter
  
 3. STEP 3 (ProductDatabaseLazyDataModel and/or ProductRepoLazyDataModel):
 
- - All these changes happen in either ProductDatabaseLazyDataModel or ProductRepoLazyDataModel based on what storage you use. They will be refered as LazyModel
+ - All these changes happen in either ProductDatabaseLazyDataModel or ProductRepoLazyDataModel based on what storage you use. They will be referred as LazyModel
  - Add filter name as a constant in LazyModel, i.e. `public static final String CREATION_DATE_FILTER = "creationDate";` This constant should have same name as the field.
  
 4. STEP 4 (ProductDatabaseLazyDataModel and/or ProductRepoLazyDataModel):
@@ -79,7 +79,7 @@ Add a field with desired type to the Product, i.e. Date creationDate with getter
    
    ```
 
- - If usign a date filter, add the Constant to the setDateFilterValue method call to the for cycle in getFilterStateFromIUser() method, i.e.
+ - If using a date filter, add the Constant to the setDateFilterValue method call to the for cycle in getFilterStateFromIUser() method, i.e.
 
     ```
    
