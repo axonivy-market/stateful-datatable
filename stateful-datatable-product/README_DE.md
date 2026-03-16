@@ -86,12 +86,10 @@ creationDate“ mit Getter und Setter und mit @Column annotiert.
    Konstante und Ihrem Setter zum Produkt hinzu, d. h.
 
     ```
-
-        else if (field.contains(CREATION_DATE_FILTER)) {
+    else if (field.contains(CREATION_DATE_FILTER)) {
             DateTime dateTime = (DateTime) newObjects.get(0);
             product.setCreationDate(dateTime.toJavaDate());
         }
-
     ```
 
  - Sie können hier auch eine Validierung hinzufügen.
@@ -103,11 +101,9 @@ creationDate“ mit Getter und Setter und mit @Column annotiert.
    in der Methode getFilterStateFromIUser() hinzu, d. h.
 
     ```
-
-        else if(ProductRepoLazyDataModel.NEW_ENUM_FILTER.equals(filter.getKey())) {
+    else if(ProductRepoLazyDataModel.NEW_ENUM_FILTER.equals(filter.getKey())) {
             setDropdownFilterValue(filter, ((ArrayList<?>) filter.getValue()).size(), NewEnum.class);
         }
-
     ```
 
  - Wenn Sie einen Datumsfilter verwenden, fügen Sie die Konstante zum Aufruf der
@@ -115,11 +111,9 @@ creationDate“ mit Getter und Setter und mit @Column annotiert.
    getFilterStateFromIUser() hinzu, d. h.
 
     ```
-
-        setDateFilterValue(filter, 
+    setDateFilterValue(filter, 
                 ProductRepoLazyDataModel.VALID_THROUGH_FILTER,
                 ProductRepoLazyDataModel.ORDER_DATE_FILTER,
                 ProductRepoLazyDataModel.DELIVERY_DATE_FILTER,
                 ProductRepoLazyDataModel.CREATION_DATE_FILTER);
-
     ```
