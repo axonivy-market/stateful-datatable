@@ -34,7 +34,7 @@ Datenbank oder im Ivy-Business-Repo verfügbar sind.
    Sie die Datenbank nicht einrichten, sondern nur den Testprozess starten:
    `Erstellen Sie ein Testdaten-Repo`.
 
-## So fügen Sie eine Spalte hinzu:
+## How to add a column:
 
 Der Ort, an dem jeder Schritt stattfindet, ist mit einem Kommentar versehen, z.
 B. „ `“ (Hinzufügen von Spalten SCHRITT 1)`, „ `“ (Hinzufügen von Spalten
@@ -64,9 +64,9 @@ creationDate“ mit Getter und Setter und mit @Column annotiert.
 
 3. SCHRITT 3 (ProductDatabaseLazyDataModel und/oder ProductRepoLazyDataModel):
 
- - All diese Änderungen finden entweder in ProductDatabaseLazyDataModel oder
-   ProductRepoLazyDataModel statt, je nachdem, welchen Speicher Sie verwenden.
-   Sie werden als LazyModel bezeichnet.
+ - All these changes happen in either ProductDatabaseLazyDataModel or
+   ProductRepoLazyDataModel based on what storage you use. They will be referred
+   as LazyModel
  - Fügen Sie den Filternamen als Konstante in LazyModel hinzu, d. h. `public
    static final String CREATION_DATE_FILTER = "creationDate";` Diese Konstante
    sollte denselben Namen wie das Feld haben.
@@ -106,9 +106,8 @@ creationDate“ mit Getter und Setter und mit @Column annotiert.
         }
     ```
 
- - Wenn Sie einen Datumsfilter verwenden, fügen Sie die Konstante zum Aufruf der
-   Methode setDateFilterValue zum for-Zyklus in der Methode
-   getFilterStateFromIUser() hinzu, d. h.
+ - If using a date filter, add the Constant to the setDateFilterValue method
+   call to the for cycle in getFilterStateFromIUser() method, i.e.
 
     ```
     setDateFilterValue(filter, 
