@@ -2,7 +2,7 @@ package com.axonivy.demo.statefuldatatable.dao;
 
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaBuilder;
 
 import com.axonivy.demo.statefuldatatable.entity.Product;
 
