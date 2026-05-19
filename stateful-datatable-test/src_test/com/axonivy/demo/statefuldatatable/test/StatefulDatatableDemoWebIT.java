@@ -30,7 +30,7 @@ import ch.ivyteam.ivy.security.IUser;
  * 5_ add a New "Product" into the business repo.
  *
  */
-@IvyWebTest(headless = true)
+@IvyWebTest
 @TestMethodOrder(OrderAnnotation.class)
 public class StatefulDatatableDemoWebIT {
 
