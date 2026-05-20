@@ -32,13 +32,14 @@ import ch.ivyteam.ivy.security.IUser;
 @IvyWebTest
 @TestMethodOrder(OrderAnnotation.class)
 public class StatefulDatatableDemoWebIT {
+  	private static final String LOG_IN = "/stateful-datatable-test/1946E968E7BAB355/logInUser.ivp?username=tester&password=tester";
 
 	@Test
 	@Order(1)
 	public void createTestData(WebAppFixture fixture, @Named("tester") IUser tester) {
 		// valid links can be copied from the start page of the internal web-browser
+		open(EngineUrl.createProcessUrl(LOG_IN));
 		open(EngineUrl.createProcessUrl("stateful-datatable-demo/183AC82DD4753247/createTestData.ivp"));
-		fixture.login(tester.getName(), "tester");
 	}
 
 	@Test
