@@ -6,6 +6,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 
 import com.axonivy.demo.statefuldatatable.entity.Product;
 
+import ch.ivyteam.ivy.business.data.store.search.Query;
+
 public class ProductDatabaseDAO extends AbstractEntityDAO<Product> implements IProductDAO  {
 	@Override
 	public Class<Product> getType() {
@@ -18,12 +20,12 @@ public class ProductDatabaseDAO extends AbstractEntityDAO<Product> implements IP
 	}
 
 	@Override
-	public long getQueryRowCount(ch.ivyteam.ivy.business.data.store.search.Query<Product> query) {
+	public long getQueryRowCount(Query<Product> query) {
 		return 0;
 	}
 
 	@Override
-	public List<Product> callQueryWithLimit(ch.ivyteam.ivy.business.data.store.search.Query<Product> query, int first, int pageSize) {
+	public List<Product> callQueryWithLimit(Query<Product> query, int first, int pageSize) {
 		return null;
 	}
 }

@@ -11,7 +11,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
+import org.hibernate.annotations.UuidGenerator;
+
 
 import com.axonivy.demo.statefuldatatable.enums.Availability;
 import com.axonivy.demo.statefuldatatable.enums.ProductStatus;
@@ -23,8 +24,10 @@ public class Product extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(length = 32, nullable = false)
-	@GeneratedValue(strategy = GenerationType.UUID)
+	@Column(length = 36, nullable = false)
+	
+	@GeneratedValue
+	@UuidGenerator
 	private String id;
 	//Adding Column STEP 1
 	@Column
