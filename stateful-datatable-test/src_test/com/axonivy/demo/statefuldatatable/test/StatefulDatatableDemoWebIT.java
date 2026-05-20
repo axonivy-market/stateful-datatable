@@ -18,7 +18,6 @@ import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
 import com.axonivy.ivy.webtest.engine.WebAppFixture;
 
-import ch.ivyteam.ivy.environment.IvyTest;
 import ch.ivyteam.ivy.security.IUser;
 
 /**

@@ -68,6 +68,32 @@
         <groupId>com.axonivy.ivy.ci</groupId>
         <artifactId>project-build-plugin</artifactId>
         <extensions>true</extensions>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <compilerWarnings>false</compilerWarnings>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </execution>
+          <execution>
+            <id>selenium.web.tests</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <argLine>-Dtest.engine.url=${test.engine.url} -Dtest.engine.app=statefuldatatabletest</argLine>
+        </configuration>
       </plugin>
     </plugins>
   </build>
