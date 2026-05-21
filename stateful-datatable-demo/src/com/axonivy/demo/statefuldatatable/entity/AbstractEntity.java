@@ -3,7 +3,7 @@ package com.axonivy.demo.statefuldatatable.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
 
 /**
  * Base database entity object

@@ -18,7 +18,6 @@ import com.axonivy.ivy.webtest.IvyWebTest;
 import com.axonivy.ivy.webtest.engine.EngineUrl;
 import com.axonivy.ivy.webtest.engine.WebAppFixture;
 
-import ch.ivyteam.ivy.environment.IvyTest;
 import ch.ivyteam.ivy.security.IUser;
 
 /**
@@ -30,17 +29,17 @@ import ch.ivyteam.ivy.security.IUser;
  * 5_ add a New "Product" into the business repo.
  *
  */
-@IvyTest
-@IvyWebTest(headless = true)
+@IvyWebTest
 @TestMethodOrder(OrderAnnotation.class)
 public class StatefulDatatableDemoWebIT {
+  	private static final String LOG_IN = "/stateful-datatable-test/1946E968E7BAB355/logInUser.ivp?username=tester&password=tester";
 
 	@Test
 	@Order(1)
 	public void createTestData(WebAppFixture fixture, @Named("tester") IUser tester) {
 		// valid links can be copied from the start page of the internal web-browser
+		open(EngineUrl.createProcessUrl(LOG_IN));
 		open(EngineUrl.createProcessUrl("stateful-datatable-demo/183AC82DD4753247/createTestData.ivp"));
-		fixture.login(tester.getName(), "tester");
 	}
 
 	@Test
