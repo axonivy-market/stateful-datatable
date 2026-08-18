@@ -1,59 +1,57 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/data-class/12.0.0/data-class.json",
+  "$schema" : "https://json-schema.axonivy.com/14.0-dev/project/data-class.json",
   "simpleName" : "StatefulDatatableData",
   "namespace" : "com.axonivy.demo.statefuldatatable.ui.StatefulDatatable",
-  "isBusinessCaseData" : false,
   "fields" : [ {
     "name" : "copyValid",
-    "type" : "Boolean",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "Boolean"
   }, {
-    "name" : "editedRowKey",
-    "type" : "String",
-    "modifiers" : [ "PERSISTENT" ]
+    "name" : "editedRowKey"
   }, {
-    "name" : "field",
-    "type" : "String",
-    "modifiers" : [ "PERSISTENT" ]
+    "name" : "field"
   }, {
     "name" : "isProfileAdmin",
-    "type" : "Boolean",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "Boolean"
   }, {
     "name" : "newObjects",
-    "type" : "List<java.lang.Object>",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "List<java.lang.Object>"
   }, {
     "name" : "numberOfCopies",
-    "type" : "Integer",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "Integer"
   }, {
     "name" : "privateProfiles",
-    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>"
+    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>",
+    "modifiers" : [ ]
   }, {
     "name" : "publicProfiles",
-    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>"
+    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Profile>",
+    "modifiers" : [ ]
   }, {
     "name" : "selectedProduct",
-    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Product>"
+    "type" : "java.util.List<com.axonivy.demo.statefuldatatable.entity.Product>",
+    "modifiers" : [ ]
   }, {
     "name" : "selectedProfile",
-    "type" : "com.axonivy.demo.statefuldatatable.entity.Profile"
+    "type" : "com.axonivy.demo.statefuldatatable.entity.Profile",
+    "modifiers" : [ ]
   }, {
     "name" : "streamedContent",
-    "type" : "org.primefaces.model.DefaultStreamedContent"
+    "type" : "org.primefaces.model.DefaultStreamedContent",
+    "modifiers" : [ ]
   }, {
     "name" : "tableRows",
-    "type" : "Integer",
-    "modifiers" : [ "PERSISTENT" ]
+    "type" : "Integer"
   }, {
     "name" : "stateDataTableBean",
-    "type" : "com.axonivy.demo.statefuldatatable.ui.StateDataTableBean"
+    "type" : "com.axonivy.demo.statefuldatatable.ui.StateDataTableBean",
+    "modifiers" : [ ]
   }, {
     "name" : "multiChangeState",
-    "type" : "com.axonivy.demo.statefuldatatable.enums.ProductStatus"
+    "type" : "com.axonivy.demo.statefuldatatable.enums.ProductStatus",
+    "modifiers" : [ ]
   }, {
     "name" : "product",
-    "type" : "com.axonivy.demo.statefuldatatable.entity.Product"
+    "type" : "com.axonivy.demo.statefuldatatable.entity.Product",
+    "modifiers" : [ ]
   } ]
 }
