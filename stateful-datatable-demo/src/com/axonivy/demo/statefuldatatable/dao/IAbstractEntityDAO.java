@@ -2,8 +2,8 @@ package com.axonivy.demo.statefuldatatable.dao;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaQuery;
 
 import com.axonivy.demo.statefuldatatable.entity.AbstractEntity;
 
